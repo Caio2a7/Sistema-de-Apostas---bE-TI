@@ -38,7 +38,7 @@ void UserRepository::saveUser(pqxx::connection* conn, UserEntity* user) {
     executeSql(conn, query);
 }
 
-UserEntity UserRepository::findByEmail(pqxx::connection* conn, string email) {
+optional<UserEntity> UserRepository::findByEmail(pqxx::connection* conn, string email) {
     UserEntity user;
     try {
         string query = "SELECT * FROM usuario WHERE email = '" + email + "';";
@@ -51,9 +51,9 @@ UserEntity UserRepository::findByEmail(pqxx::connection* conn, string email) {
             user.setEmail(result[0][2].as<std::string>());
             user.setPassword(result[0][3].as<std::string>());
             user.setBalance(result[0][4].as<double>());
-        } else {
-            std::cerr << "Nenhum usuário encontrado com o email: " << email << std::endl;
-        }
+
+            return user;
+        } 
     } catch (const pqxx::sql_error& e) {
         std::cerr << "Erro ao executar a consulta: " << e.what() << std::endl;
         std::cerr << "Consulta: " << e.query() << std::endl;
@@ -61,5 +61,5 @@ UserEntity UserRepository::findByEmail(pqxx::connection* conn, string email) {
         std::cerr << "Erro geral: " << e.what() << std::endl;
     }
 
-    return user;
+    return nullopt;
 }

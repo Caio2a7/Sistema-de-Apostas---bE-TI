@@ -7,11 +7,12 @@ BUILDDIR = build
 SRCDIR = src/main
 ENTITIDIR = $(SRCDIR)/entities
 REPOSITORYDIR = $(SRCDIR)/repository
+SERVICEDIR = $(SRCDIR)/service
 DBCONFIGDIR = $(SRCDIR)/infra/db
 CLISRC = $(SRCDIR)/cli
 
 # Arquivos de fonte e de objetos
-SOURCES = $(wildcard $(ENTITIDIR)/*.cpp) $(wildcard $(CLISRC)/*.cpp) $(wildcard $(DBCONFIGDIR)/*.cpp) $(wildcard $(REPOSITORYDIR)/*.cpp) $(wildcard $(SRCDIR)/*.cpp)
+SOURCES = $(wildcard $(ENTITIDIR)/*.cpp) $(wildcard $(CLISRC)/*.cpp) $(wildcard $(DBCONFIGDIR)/*.cpp)  $(wildcard $(REPOSITORYDIR)/*.cpp)  $(wildcard $(SERVICEDIR)/*.cpp) $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Nome do executável

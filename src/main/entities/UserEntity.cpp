@@ -27,5 +27,6 @@ void UserEntity::toString() const {
     cout << "ID: " << id << "\n"
          << "Name: " << name << "\n"
          << "Email: " << email << "\n"
+         << "Senha: " << password << "\n"
          << "Balance: " << balance << endl;
 }

@@ -15,7 +15,7 @@ class UserRepository {
 
         void saveUser(pqxx::connection* conn, UserEntity* user);
 
-        UserEntity findByEmail(pqxx::connection* conn, string email);
+        optional<UserEntity> findByEmail(pqxx::connection* conn, string email);
 };
 
 
