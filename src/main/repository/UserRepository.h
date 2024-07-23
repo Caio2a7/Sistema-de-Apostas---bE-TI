@@ -4,6 +4,7 @@
 #include <pqxx/pqxx>
 #include <list>
 #include <string>
+#include <sstream>
 #include "../entities/UserEntity.h"
 #include "../infra/db/configure.h"
 

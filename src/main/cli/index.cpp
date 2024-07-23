@@ -1,9 +1,4 @@
-#include <iostream>
-#include <string>
 #include "index.h"
-#include "../entities/UserEntity.h"
-
-using namespace std;
 
 size_t welcome() {
     size_t option;

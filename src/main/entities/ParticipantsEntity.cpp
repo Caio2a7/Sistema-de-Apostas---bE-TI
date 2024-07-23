@@ -1,7 +1,4 @@
-#include <iostream>
 #include "ParticipantsEntity.h"
-
-using namespace std;
 
 ParticipantsEntity::ParticipantsEntity() : id(0), victorys(0) {}
 

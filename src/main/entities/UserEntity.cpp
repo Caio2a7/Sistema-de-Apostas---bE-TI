@@ -1,7 +1,4 @@
-#include <iostream>
 #include "UserEntity.h"
-
-using namespace std;
 
 UserEntity::UserEntity() : id(0), balance(0.0) {}
 

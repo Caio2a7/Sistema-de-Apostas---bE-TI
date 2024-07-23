@@ -1,18 +1,4 @@
-#include <iostream>
-#include <pqxx/pqxx>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <algorithm>
-#include <filesystem>
 #include "configure.h"
-
-#define FILE_PATH "src/properties/db"
-
-using namespace std;
-
-namespace fs = filesystem; 
 
 string readSqlFile(const fs::path& file_path) {
     ifstream file(file_path);

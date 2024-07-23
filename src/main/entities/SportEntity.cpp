@@ -1,7 +1,4 @@
-#include <iostream>
 #include "SportEntity.h"
-
-using namespace std;
 
 SportEntity::SportEntity() : id(0) {}
 

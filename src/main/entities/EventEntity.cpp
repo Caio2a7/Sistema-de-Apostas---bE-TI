@@ -1,7 +1,4 @@
-#include <iostream>
 #include "EventEntity.h"
-
-using namespace std;
 
 EventEntity::EventEntity() 
     : id(0), odds({0.0, 0.0, 0.0}), time(0) {}

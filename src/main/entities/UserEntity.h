@@ -1,6 +1,7 @@
 #ifndef USER_ENTITY_H
 #define USER_ENTITY_H
 
+#include <iostream>
 #include <string>
 
 using namespace std;

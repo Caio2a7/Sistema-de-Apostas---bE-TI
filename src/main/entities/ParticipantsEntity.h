@@ -1,6 +1,7 @@
 #ifndef PARTICIPANTS_ENTITY_H
 #define PARTICIPANTS_ENTITY_H
 
+#include <iostream>
 #include <string>
 
 using namespace std;

@@ -1,6 +1,7 @@
 #ifndef SPORT_ENTITY_H
 #define SPORT_ENTITY_H
 
+#include <iostream>
 #include <string>
 
 using namespace std;

@@ -1,6 +1,7 @@
 #ifndef EVENT_ENTITY_H
 #define EVENT_ENTITY_H
 
+#include <iostream>
 #include <string>
 #include <array>
 #include "ParticipantsEntity.h"

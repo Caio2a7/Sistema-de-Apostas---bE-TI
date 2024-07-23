@@ -1,12 +1,4 @@
-#include <pqxx/pqxx>
-#include <list>
-#include <string>
-#include <sstream>
 #include "UserRepository.h"
-#include "../entities/UserEntity.h"
-#include "../infra/db/configure.h"
-
-using namespace std;
 
 size_t UserRepository::countAllUsers(pqxx::connection* conn) {
     string querySql = "SELECT COUNT(*) FROM usuario;";
