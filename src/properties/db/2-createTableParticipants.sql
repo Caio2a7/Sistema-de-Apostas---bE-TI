@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS participantes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    vitorias INTEGER NOT NULL
+)
