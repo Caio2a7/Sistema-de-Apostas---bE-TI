@@ -1,11 +1,11 @@
 #include "UserRoleEnum.h"
 
-ostream& operator<<(ostream& os, UserRole color) {
+ostream& operator<<(ostream& os, UserRoleEnum color) {
     switch (color) {
-        case UserRole::ADMIN:
+        case UserRoleEnum::ADMIN:
             os << "ADMIN";
             break;
-        case UserRole::USUARIO:
+        case UserRoleEnum::USUARIO:
             os << "USUARIO";
             break;
         default:

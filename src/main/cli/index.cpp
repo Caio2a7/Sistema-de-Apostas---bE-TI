@@ -31,5 +31,5 @@ UserEntity createAccount() {
     cout << "Saldo inicial: ";
     cin >> balance;
 
-    return UserEntity(0, name, email, password, UserRole::USUARIO, balance);
+    return UserEntity(0, name, email, password, UserRoleEnum::USUARIO, balance);
 }

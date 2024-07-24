@@ -5,11 +5,11 @@
 
 using namespace std;
 
-enum class UserRole {
+enum class UserRoleEnum {
     ADMIN,
     USUARIO
 };
 
-std::ostream& operator<<(std::ostream& os, UserRole color);
+std::ostream& operator<<(std::ostream& os, UserRoleEnum color);
 
 #endif 

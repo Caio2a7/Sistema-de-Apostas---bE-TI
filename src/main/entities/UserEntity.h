@@ -13,13 +13,13 @@ class UserEntity {
         string name;
         string email;
         string password;
-        UserRole role;
+        UserRoleEnum role;
         double balance;
 
     public:
         UserEntity();
 
-        UserEntity(int id, const string& name, const string& email, const string& password, const UserRole role, double balance);
+        UserEntity(int id, const string& name, const string& email, const string& password, const UserRoleEnum role, double balance);
 
         int getId() const;
         void setId(int id);
@@ -33,8 +33,8 @@ class UserEntity {
         string getPassword() const;
         void setPassword(const string& password);
 
-        UserRole getRole() const;
-        void setRole(const UserRole role);
+        UserRoleEnum getRole() const;
+        void setRole(const UserRoleEnum role);
 
         double getBalance() const;
         void setBalance(double balance);

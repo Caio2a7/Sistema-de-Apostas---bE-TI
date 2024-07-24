@@ -2,7 +2,7 @@
 
 UserEntity::UserEntity() : id(0), balance(0.0) {}
 
-UserEntity::UserEntity(int id, const string& name, const string& email, const string& password, UserRole role, double balance)
+UserEntity::UserEntity(int id, const string& name, const string& email, const string& password, UserRoleEnum role, double balance)
     : id(id), name(name), email(email), password(password), role(role), balance(balance) {}
 
 int UserEntity::getId() const { return id; }
@@ -17,8 +17,8 @@ void UserEntity::setEmail(const string& email) { this->email = email; }
 string UserEntity::getPassword() const { return password; }
 void UserEntity::setPassword(const string& password) { this->password = password; }
 
-UserRole UserEntity::getRole() const { return role; }
-void UserEntity::setRole(const UserRole role) { this->role = role; }
+UserRoleEnum UserEntity::getRole() const { return role; }
+void UserEntity::setRole(const UserRoleEnum role) { this->role = role; }
 
 double UserEntity::getBalance() const { return balance; }
 void UserEntity::setBalance(double balance) { this->balance = balance; }
