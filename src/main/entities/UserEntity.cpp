@@ -17,6 +17,9 @@ void UserEntity::setEmail(const string& email) { this->email = email; }
 string UserEntity::getPassword() const { return password; }
 void UserEntity::setPassword(const string& password) { this->password = password; }
 
+string UserEntity::getRole() const { return role; }
+void UserEntity::setRole(const string& role) { this->role = role; }
+
 double UserEntity::getBalance() const { return balance; }
 void UserEntity::setBalance(double balance) { this->balance = balance; }
 

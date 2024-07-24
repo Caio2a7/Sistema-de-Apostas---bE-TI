@@ -12,6 +12,7 @@ class UserEntity {
         string name;
         string email;
         string password;
+        string role;
         double balance;
 
     public:
@@ -30,6 +31,9 @@ class UserEntity {
 
         string getPassword() const;
         void setPassword(const string& password);
+
+        string getRole() const;
+        void setRole(const string& role);
 
         double getBalance() const;
         void setBalance(double balance);

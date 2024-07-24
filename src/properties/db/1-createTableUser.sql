@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS usuario (
     nome VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
+    cargo VARCHAR(20) NOT NULL,
     saldo NUMERIC(15, 2) NOT NULL
 );
