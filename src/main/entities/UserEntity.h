@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include "../enum/UserRoleEnum.h"
 
 using namespace std;
 
@@ -12,13 +13,13 @@ class UserEntity {
         string name;
         string email;
         string password;
-        string role;
+        UserRole role;
         double balance;
 
     public:
         UserEntity();
 
-        UserEntity(int id, const string& name, const string& email, const string& password, double balance);
+        UserEntity(int id, const string& name, const string& email, const string& password, const UserRole role, double balance);
 
         int getId() const;
         void setId(int id);
@@ -32,8 +33,8 @@ class UserEntity {
         string getPassword() const;
         void setPassword(const string& password);
 
-        string getRole() const;
-        void setRole(const string& role);
+        UserRole getRole() const;
+        void setRole(const UserRole role);
 
         double getBalance() const;
         void setBalance(double balance);
