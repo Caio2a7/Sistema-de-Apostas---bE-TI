@@ -32,3 +32,6 @@ void EventEntity::setOdds(size_t pos, double value) {
 
 time_t EventEntity::getTime() const { return time; }
 void EventEntity::setTime(time_t time) { this->time = time; }
+
+string EventEntity::getStatus() const { return status; };
+void EventEntity::setStatus(const string& status) { this->status = status; };
