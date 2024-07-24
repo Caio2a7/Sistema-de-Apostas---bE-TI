@@ -1,5 +1,5 @@
-#ifndef COLORENUM_H
-#define COLORENUM_H
+#ifndef USER_ROLE_ENUM_H
+#define USER_ROLE_ENUM_H
 
 #include <iostream>
 
