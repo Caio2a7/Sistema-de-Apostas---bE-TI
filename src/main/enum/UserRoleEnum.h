@@ -10,6 +10,10 @@ enum class UserRoleEnum {
     USUARIO
 };
 
+UserRoleEnum convertStringToRole(const std::string& string);
+
 std::ostream& operator<<(std::ostream& os, UserRoleEnum color);
+
+std::string to_string(UserRoleEnum role);
 
 #endif 
