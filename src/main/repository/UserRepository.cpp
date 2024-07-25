@@ -1,51 +1,45 @@
 #include "UserRepository.h"
 
-size_t UserRepository::countAllUsers(pqxx::connection* conn) {
-    string querySql = "SELECT COUNT(*) FROM usuario;";
-    pqxx::result res = executeSql(conn, querySql);
+// Vai construir a entidade usuário
+UserEntity UserRepository::createEntityFromResult(const pqxx::row& row) {
+    std::string cargoValue = row["cargo"].as<std::string>();
+    UserRoleEnum cargoEnum = convertStringToRole(cargoValue);
 
-    if (res.empty()) {
-        cerr << "Erro ao contar usuários." << endl;
-        return 0;
+    return UserEntity(
+        row["id"].as<size_t>(), 
+        row["nome"].as<std::string>(), 
+        row["email"].as<std::string>(), 
+        row["senha"].as<std::string>(), 
+        cargoEnum,
+        row["saldo"].as<double>()
+    );
+}
+
+// Vai processar o vetor do método findAll para construir as entidades
+std::vector<UserEntity> UserRepository::processFindAll(pqxx::result res) {
+    std::vector<UserEntity> results;
+    try {
+        for (const auto& row : res) {
+            // Criação da entidade a partir da linha do resultado
+            UserEntity entity = createEntityFromResult(row);
+            results.push_back(entity);
+        }
+    } catch (const std::exception& e) {
+        cerr << "Erro ao buscar registros: " << e.what() << endl;
     }
 
-    size_t count = res[0][0].as<size_t>(); // Obtém o resultado
-    cout << "Total de usuários: " << count << endl;
-    return count;
+    return results;
 }
 
-void UserRepository::saveUser(pqxx::connection* conn, UserEntity* user) {
-    size_t totalUsers = this->countAllUsers(conn);
-    user->setId(totalUsers+1);
-
-    ostringstream oss;
-    oss << "INSERT INTO usuario (id, nome, email, senha, saldo) VALUES ("
-          << user->getId() << ", '"
-          << user->getName() << "', '"
-          << user->getEmail() << "', '"
-          << user->getPassword() << "', "
-          << user->getBalance() << ");";
-    string query = oss.str();
-    cout << "Query: " << query << endl;
-    executeSql(conn, query);
-}
-
-optional<UserEntity> UserRepository::findByEmail(pqxx::connection* conn, string email) {
-    UserEntity user;
+optional<pqxx::result> UserRepository::findByEmail(pqxx::connection* conn, QueryMetaData * metaData, 
+                            const string& email) {
     try {
-        string query = "SELECT * FROM usuario WHERE email = '" + email + "';";
+        QueryBuilder queryBuilder;
+        string query = queryBuilder.buildFindByEmailQuery(metaData, email);
 
         pqxx::result result = executeSql(conn, query);
 
-        if (result.size() == 1) {
-            user.setId(result[0][0].as<int>());
-            user.setName(result[0][1].as<std::string>());
-            user.setEmail(result[0][2].as<std::string>());
-            user.setPassword(result[0][3].as<std::string>());
-            user.setBalance(result[0][4].as<double>());
-
-            return user;
-        } 
+        return result;
     } catch (const pqxx::sql_error& e) {
         std::cerr << "Erro ao executar a consulta: " << e.what() << std::endl;
         std::cerr << "Consulta: " << e.query() << std::endl;
@@ -54,4 +48,4 @@ optional<UserEntity> UserRepository::findByEmail(pqxx::connection* conn, string 
     }
 
     return nullopt;
-}
+}   
