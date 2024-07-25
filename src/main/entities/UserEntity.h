@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include "../enum/UserRoleEnum.h"
+#include "../enum/TablesDataBaseEnum.h"
 
 using namespace std;
 
@@ -38,6 +40,10 @@ class UserEntity {
 
         double getBalance() const;
         void setBalance(double balance);
+
+        TablesDataBaseEnum getTable() const;
+
+        std::vector<std::string> getColumns();
 
         void toString() const;
 };

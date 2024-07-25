@@ -23,6 +23,12 @@ void UserEntity::setRole(const UserRoleEnum role) { this->role = role; }
 double UserEntity::getBalance() const { return balance; }
 void UserEntity::setBalance(double balance) { this->balance = balance; }
 
+TablesDataBaseEnum UserEntity::getTable() const { return TablesDataBaseEnum::usuario; }
+
+std::vector<std::string> UserEntity::getColumns() {
+    return {"id", "nome", "email", "senha", "cargo", "saldo"};
+}
+
 void UserEntity::toString() const {
     cout << "ID: " << id << "\n"
          << "Name: " << name << "\n"
