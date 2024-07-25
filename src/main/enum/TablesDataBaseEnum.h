@@ -16,4 +16,6 @@ enum class TablesDataBaseEnum {
 
 std::ostream& operator<<(std::ostream& os, TablesDataBaseEnum tables);
 
+std::string to_string(TablesDataBaseEnum role);
+
 #endif

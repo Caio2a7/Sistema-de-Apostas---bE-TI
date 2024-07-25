@@ -23,3 +23,18 @@ std::ostream& operator<<(std::ostream& os, TablesDataBaseEnum tables) {
     }
     return os;
 }
+
+std::string to_string(TablesDataBaseEnum tables) {
+    switch (tables) {
+        case TablesDataBaseEnum::usuario:
+            return "usuario";
+        case TablesDataBaseEnum::esporte:
+            return "esporte";
+        case TablesDataBaseEnum::participantes:
+            return "participantes";
+        case TablesDataBaseEnum::apostas:
+            return "apostas";
+        case TablesDataBaseEnum::eventos:
+            return "eventos";
+    }
+}
