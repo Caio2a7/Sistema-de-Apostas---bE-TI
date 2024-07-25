@@ -65,9 +65,9 @@ class QueryBuilder {
         return query.str();
     }
 
-    string buildFindByEmailQuery(const QueryMetaData& metaData, const string& email) {
+    string buildFindByEmailQuery(QueryMetaData *metaData, const string& email) {
         ostringstream query;
-        query << "SELECT * FROM " << metaData.tableName 
+        query << "SELECT * FROM " << metaData->tableName 
               << " WHERE email = " << pqxx::to_string(email) << ";";
 
         cout << "Query: " << query.str() << endl;
@@ -75,14 +75,14 @@ class QueryBuilder {
         return query.str();
     }
 
-    string buildUpdateQuery(const QueryMetaData& metaData, size_t id) {
+    string buildUpdateQuery(QueryMetaData *metaData, size_t id) {
         ostringstream query;
-        query << "UPDATE " << metaData.tableName << " SET ";
+        query << "UPDATE " << metaData->tableName << " SET ";
 
         // Adiciona as colunas e valores
-        for (size_t i = 0; i < metaData.columns.size(); ++i) {
-            query << metaData.columns[i] << " = " << pqxx::to_string(metaData.values[i]);
-            if (i < metaData.columns.size() - 1) {
+        for (size_t i = 0; i < metaData->columns.size(); ++i) {
+            query << metaData->columns[i] << " = " << pqxx::to_string(metaData->values[i]);
+            if (i < metaData->columns.size() - 1) {
                 query << ", ";
             }
         }
