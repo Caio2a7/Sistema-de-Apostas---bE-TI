@@ -1,7 +1,7 @@
 #include "EventStatusEnum.h"
 
-ostream& operator<<(ostream& os, EventStatusEnum color) {
-    switch (color) {
+ostream& operator<<(ostream& os, EventStatusEnum status) {
+    switch (status) {
         case EventStatusEnum::AGENDADA:
             os << "Agendada";
             break;
