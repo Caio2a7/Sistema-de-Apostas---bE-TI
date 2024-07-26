@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS eventos (
     id_time_b INTEGER NOT NULL,
     odds DECIMAL(10,2)[] NOT NULL,
     horario TIMESTAMP NOT NULL,
+    status VARCHAR(20) NOT NULL,
     FOREIGN KEY (id_time_a) REFERENCES participantes(id),
     FOREIGN KEY (id_time_b) REFERENCES participantes(id),
     FOREIGN KEY (id_esporte) REFERENCES esporte(id)

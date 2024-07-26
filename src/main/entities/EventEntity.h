@@ -17,6 +17,7 @@ class EventEntity {
         ParticipantsEntity teamB;
         array<double, 3> odds; 
         time_t time;
+        string status;
 
     public:
         EventEntity();
@@ -41,6 +42,9 @@ class EventEntity {
 
         time_t getTime() const;
         void setTime(time_t time);
+
+        string getStatus() const;
+        void setStatus(const string& status);
 };
 
 #endif 

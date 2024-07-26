@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "../entities/UserEntity.h"
+#include "../enum/UserRoleEnum.h"
 
 using namespace std;
 
