@@ -7,6 +7,7 @@
 #include <vector>
 #include "ParticipantsEntity.h"
 #include "SportEntity.h"
+#include "../enum/EventStatusEnum.h"
 
 using namespace std;
 
@@ -18,12 +19,12 @@ class EventEntity {
         ParticipantsEntity teamB;
         array<double, 3> odds; 
         time_t time;
-        string status;
+        EventStatusEnum status;
 
     public:
         EventEntity();
 
-        EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, time_t timestamp);
+        EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, time_t timestamp, EventStatusEnum status);
 
         int getId() const;
         void setId(int id);
@@ -44,8 +45,8 @@ class EventEntity {
         time_t getTime() const;
         void setTime(time_t time);
 
-        string getStatus() const;
-        void setStatus(const string& status);
+        EventStatusEnum getStatus() const;
+        void setStatus(const EventStatusEnum& status);
 
         TablesDataBaseEnum getTable() const;
 
