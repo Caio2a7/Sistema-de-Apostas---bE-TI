@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include "../enum/TablesDataBaseEnum.h"
 
 using namespace std;
 
@@ -27,6 +29,11 @@ class ParticipantsEntity {
         void setVictorys(int Victorys);
 
         void toString() const;
+        
+        TablesDataBaseEnum getTable() const;
+
+        std::vector<std::string> getColumns(); 
+
 };
 
 #endif 

@@ -19,3 +19,10 @@ void ParticipantsEntity::toString() const {
          << "Name: " << name << "\n"
          << "victorys: " << victorys << endl;
 }
+
+TablesDataBaseEnum ParticipantsEntity::getTable() const { return TablesDataBaseEnum::participantes; }
+
+std::vector<std::string> ParticipantsEntity::getColumns() {
+    return {"id", "nome", "vitorias"};
+}
+
