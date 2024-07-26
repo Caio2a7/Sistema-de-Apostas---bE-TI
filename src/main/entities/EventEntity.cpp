@@ -35,3 +35,9 @@ void EventEntity::setTime(time_t time) { this->time = time; }
 
 string EventEntity::getStatus() const { return status; };
 void EventEntity::setStatus(const string& status) { this->status = status; };
+
+TablesDataBaseEnum ParticipantsEntity::getTable() const { return TablesDataBaseEnum::eventos; }
+
+std::vector<std::string> ParticipantsEntity::getColumns() {
+    return {"id", "id_esporte", "id_time_a", "id_time_b", "odds", "horario", "status"};
+}

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <array>
+#include <vector>
 #include "ParticipantsEntity.h"
 #include "SportEntity.h"
 
@@ -45,6 +46,10 @@ class EventEntity {
 
         string getStatus() const;
         void setStatus(const string& status);
+
+        TablesDataBaseEnum getTable() const;
+
+        std::vector<std::string> getColumns(); 
 };
 
 #endif 
