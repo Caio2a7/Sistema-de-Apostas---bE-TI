@@ -16,4 +16,6 @@ EventStatusEnum convertStringToEventStatusEnum(const std::string& string);
 
 std::ostream& operator<<(std::ostream& os, EventStatusEnum status);
 
+std::string to_string(EventStatusEnum status);
+
 #endif

@@ -24,3 +24,14 @@ ostream& operator<<(ostream& os, EventStatusEnum status) {
     }
     return os;
 }
+
+std::string to_string(EventStatusEnum status) {
+    switch (status) {
+        case EventStatusEnum::AGENDADA:
+            return "AGENDADA";
+        case EventStatusEnum::ANDAMENTO:
+            return "ANDAMENTO";
+        case EventStatusEnum::FINALIZADA:
+            return "FINALIZADA";
+    }
+}
