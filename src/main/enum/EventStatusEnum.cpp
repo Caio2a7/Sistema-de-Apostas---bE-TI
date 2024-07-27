@@ -1,5 +1,12 @@
 #include "EventStatusEnum.h"
 
+EventStatusEnum convertStringToEventStatusEnum(const std::string& string) {
+    if (string == "AGENDADA") return EventStatusEnum::AGENDADA;
+    if (string == "ANDAMENTO") return EventStatusEnum::ANDAMENTO;
+    if (string == "FINALIZADA") return EventStatusEnum::FINALIZADA;
+}
+
+
 ostream& operator<<(ostream& os, EventStatusEnum status) {
     switch (status) {
         case EventStatusEnum::AGENDADA:

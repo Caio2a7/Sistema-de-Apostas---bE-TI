@@ -12,6 +12,8 @@ enum class EventStatusEnum {
     FINALIZADA
 };
 
+EventStatusEnum convertStringToEventStatusEnum(const std::string& string);
+
 std::ostream& operator<<(std::ostream& os, EventStatusEnum status);
 
 #endif
