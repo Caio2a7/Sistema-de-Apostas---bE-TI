@@ -41,3 +41,19 @@ TablesDataBaseEnum EventEntity::getTable() const { return TablesDataBaseEnum::ev
 std::vector<std::string> EventEntity::getColumns() {
     return {"id", "id_esporte", "id_time_a", "id_time_b", "odds", "horario", "status"};
 }
+
+void EventEntity::toString() const {
+    cout << "ID: " << id << "\n";
+    cout << "Horário: " << to_string(time) << endl;
+    cout << "Status: " << to_string(status) << endl;
+    cout << "Esporte:" << endl;
+    sport.toString();
+    cout << "Time A:" << endl;
+    teamA.toString();
+    cout << "Time B:" << endl;
+    teamB.toString();
+    cout << "Odds:" << endl;
+    for (const auto& a : odds) {
+        cout << a << endl;
+    }
+}
