@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <array>
 #include <pqxx/pqxx>
 
 using namespace std;
@@ -92,6 +93,21 @@ class QueryBuilder {
         cout << "Query: " << query.str() << endl;
 
         return query.str();
+    }
+
+    string buildValueArray(const std::vector<double>& arr) {
+        std::ostringstream oss;
+        oss << "{";
+
+        for (size_t i = 0; i < arr.size(); ++i) {
+            oss << std::fixed << std::setprecision(2) << arr[i];
+            if (i != arr.size() - 1) {
+                oss << ", ";
+            }
+        }
+
+        oss << "}";
+        return oss.str();
     }
 };
 
