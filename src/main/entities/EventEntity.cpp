@@ -3,7 +3,7 @@
 EventEntity::EventEntity() 
     : id(0), odds({0.0, 0.0, 0.0}), time(0) {}
 
-EventEntity::EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, time_t timestamp, EventStatusEnum status)
+EventEntity::EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, string timestamp, EventStatusEnum status)
     : id(id), sport(sport), teamA(teamA), teamB(teamB), odds(odds), time(timestamp), status(status) {}
 
 int EventEntity::getId() const { return id; }
@@ -30,8 +30,8 @@ void EventEntity::setOdds(size_t pos, double value) {
     }
 }
 
-time_t EventEntity::getTime() const { return time; }
-void EventEntity::setTime(time_t time) { this->time = time; }
+string EventEntity::getTime() const { return time; }
+void EventEntity::setTime(string time) { this->time = time; }
 
 EventStatusEnum EventEntity::getStatus() const { return status; };
 void EventEntity::setStatus(const EventStatusEnum& status) { this->status = status; };
@@ -44,7 +44,7 @@ std::vector<std::string> EventEntity::getColumns() {
 
 void EventEntity::toString() const {
     cout << "ID: " << id << "\n";
-    cout << "Horário: " << to_string(time) << endl;
+    cout << "Horário: " << time << endl;
     cout << "Status: " << to_string(status) << endl;
     cout << "Esporte:" << endl;
     sport.toString();

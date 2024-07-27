@@ -18,13 +18,13 @@ class EventEntity {
         ParticipantsEntity teamA;
         ParticipantsEntity teamB;
         array<double, 3> odds; 
-        time_t time;
+        string time;
         EventStatusEnum status;
 
     public:
         EventEntity();
 
-        EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, time_t timestamp, EventStatusEnum status);
+        EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, string timestamp, EventStatusEnum status);
 
         int getId() const;
         void setId(int id);
@@ -42,8 +42,8 @@ class EventEntity {
         void setOdds(const array<double, 3>& odds);
         void setOdds(size_t pos, double value);
 
-        time_t getTime() const;
-        void setTime(time_t time);
+        string getTime() const;
+        void setTime(string time);
 
         EventStatusEnum getStatus() const;
         void setStatus(const EventStatusEnum& status);
