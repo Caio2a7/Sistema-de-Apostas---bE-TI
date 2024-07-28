@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include "../enum/TablesDataBaseEnum.h"
 
 using namespace std;
 
@@ -27,6 +29,10 @@ class SportEntity {
         void setType(const string& type);
 
         void toString() const;
+
+        TablesDataBaseEnum getTable() const;
+
+        std::vector<std::string> getColumns(); 
 };
 
 #endif 

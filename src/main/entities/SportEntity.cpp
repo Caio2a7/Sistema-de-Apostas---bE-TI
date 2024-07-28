@@ -19,3 +19,9 @@ void SportEntity::toString() const {
          << "Name: " << name << "\n"
          << "Type: " << type << endl;
 }
+
+TablesDataBaseEnum SportEntity::getTable() const { return TablesDataBaseEnum::esporte; }
+
+std::vector<std::string> SportEntity::getColumns() {
+    return {"id", "nome", "tipo"};
+}

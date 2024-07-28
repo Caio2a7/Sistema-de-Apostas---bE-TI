@@ -3,7 +3,7 @@
 // Vai construir a entidade usuário
 UserEntity UserRepository::createEntityFromResult(const pqxx::row& row) {
     std::string cargoValue = row["cargo"].as<std::string>();
-    UserRoleEnum cargoEnum = convertStringToRole(cargoValue);
+    UserRoleEnum cargoEnum = convertStringToRoleEnum(cargoValue);
 
     return UserEntity(
         row["id"].as<size_t>(), 

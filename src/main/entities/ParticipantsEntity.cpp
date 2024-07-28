@@ -17,5 +17,12 @@ void ParticipantsEntity::setVictorys(int victorys) { this->victorys = victorys; 
 void ParticipantsEntity::toString() const {
     cout << "ID: " << id << "\n"
          << "Name: " << name << "\n"
-         << "victorys: " << victorys << endl;
+         << "Vitórias: " << victorys << endl;
 }
+
+TablesDataBaseEnum ParticipantsEntity::getTable() const { return TablesDataBaseEnum::participantes; }
+
+std::vector<std::string> ParticipantsEntity::getColumns() {
+    return {"id", "nome", "vitorias"};
+}
+

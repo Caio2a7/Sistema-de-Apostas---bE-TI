@@ -15,7 +15,7 @@ ostream& operator<<(ostream& os, UserRoleEnum color) {
     return os;
 }
 
-UserRoleEnum convertStringToRole(const std::string& string) {
+UserRoleEnum convertStringToRoleEnum(const std::string& string) {
     if (string == "ADMIN") return UserRoleEnum::ADMIN;
     if (string == "USUARIO") return UserRoleEnum::USUARIO;
 }

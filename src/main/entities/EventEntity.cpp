@@ -3,8 +3,8 @@
 EventEntity::EventEntity() 
     : id(0), odds({0.0, 0.0, 0.0}), time(0) {}
 
-EventEntity::EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, time_t timestamp)
-    : id(id), sport(sport), teamA(teamA), teamB(teamB), odds(odds), time(timestamp) {}
+EventEntity::EventEntity(int id, SportEntity sport, ParticipantsEntity teamA, ParticipantsEntity teamB, const array<double, 3>& odds, string timestamp, EventStatusEnum status)
+    : id(id), sport(sport), teamA(teamA), teamB(teamB), odds(odds), time(timestamp), status(status) {}
 
 int EventEntity::getId() const { return id; }
 void EventEntity::setId(int id) {  this->id = id; }
@@ -30,8 +30,30 @@ void EventEntity::setOdds(size_t pos, double value) {
     }
 }
 
-time_t EventEntity::getTime() const { return time; }
-void EventEntity::setTime(time_t time) { this->time = time; }
+string EventEntity::getTime() const { return time; }
+void EventEntity::setTime(string time) { this->time = time; }
 
-string EventEntity::getStatus() const { return status; };
-void EventEntity::setStatus(const string& status) { this->status = status; };
+EventStatusEnum EventEntity::getStatus() const { return status; };
+void EventEntity::setStatus(const EventStatusEnum& status) { this->status = status; };
+
+TablesDataBaseEnum EventEntity::getTable() const { return TablesDataBaseEnum::eventos; }
+
+std::vector<std::string> EventEntity::getColumns() {
+    return {"id", "id_esporte", "id_time_a", "id_time_b", "odds", "horario", "status"};
+}
+
+void EventEntity::toString() const {
+    cout << "ID: " << id << "\n";
+    cout << "Horário: " << time << endl;
+    cout << "Status: " << to_string(status) << endl;
+    cout << "Esporte:" << endl;
+    sport.toString();
+    cout << "Time A:" << endl;
+    teamA.toString();
+    cout << "Time B:" << endl;
+    teamB.toString();
+    cout << "Odds:" << endl;
+    for (const auto& a : odds) {
+        cout << a << endl;
+    }
+}

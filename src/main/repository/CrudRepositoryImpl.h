@@ -1,3 +1,6 @@
+#ifndef CRUD_REPOSITORY_IMPL_H
+#define CRUD_REPOSITORY_IMPL_H
+
 #include "ICrudRepository.h"
 
 template <typename T>
@@ -44,3 +47,5 @@ public:
         return res;
     }
 };
+
+#endif
