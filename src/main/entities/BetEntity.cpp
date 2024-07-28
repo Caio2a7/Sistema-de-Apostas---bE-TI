@@ -20,3 +20,19 @@ void BetEntity::setAmount(double amount) { this->amount = amount; }
 
 string BetEntity::getBet() const { return bet; }
 void BetEntity::setBet(const string& bet) { this->bet = bet; }
+
+TablesDataBaseEnum BetEntity::getTable() const { return TablesDataBaseEnum::apostas; }
+
+std::vector<std::string> BetEntity::getColumns() {
+    return {"id", "id_usuario", "id_evento", "valor", "aposta"};
+}
+
+void BetEntity::toString() const {
+    cout << "ID: " << id << "\n";
+    cout << "Usuário: " << endl;
+    user.toString();
+    cout << "Evento: " << endl;
+    event.toString();
+    cout << "Valor da Aposta:" << amount << endl;
+    cout << "Tipo da aposta:" << bet << endl;
+}

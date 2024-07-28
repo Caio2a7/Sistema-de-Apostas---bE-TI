@@ -4,6 +4,7 @@
 #include <string>
 #include "EventEntity.h"
 #include "UserEntity.h"
+#include "../enum/TablesDataBaseEnum.h"
 
 using namespace std;
 
@@ -34,6 +35,12 @@ class BetEntity {
 
         string getBet() const;
         void setBet(const string& bet);
+
+        TablesDataBaseEnum getTable() const;
+
+        std::vector<std::string> getColumns(); 
+
+        void toString() const;
 };
 
 #endif 
