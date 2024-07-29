@@ -5,19 +5,51 @@
 #include "service/EventService.h"
 #include "service/SportService.h"
 #include "service/ParticipantsService.h"
+#include "service/BetService.h"
+#include "service/UserService.h"
 #include "entities/EventEntity.h"
 #include "entities/SportEntity.h"
 #include "entities/ParticipantsEntity.h"
+#include "entities/BetEntity.h"
+#include "entities/UserEntity.h"
 #include "enum/UserRoleEnum.h"
 #include "enum/EventStatusEnum.h"
+#include "enum/TypeOfBets.h"
 
 int main() {
     try {
         // Criar uma conexão com o banco de dados
         pqxx::connection conn("dbname=beti user=postgres password=root hostaddr=127.0.0.1 port=5432");
-        EventService userService;
+        UserService userService;
+        EventService eventService;
         SportService sportService;
+        BetService betService;
         ParticipantsService participantsService;
+
+
+        UserEntity userEntity = userService.findById(&conn, 17).value();
+        EventEntity eventEntity = eventService.findById(&conn, 2).value();
+
+        BetEntity betEntity1(0, userEntity, eventEntity, 100.0, TypeOfBets::VITORIA_TIME_A);
+
+        userEntity = userService.findById(&conn, 18).value();
+        eventEntity = eventService.findById(&conn, 1).value();
+
+        BetEntity betEntity2(0, userEntity, eventEntity, 100.0, TypeOfBets::EMPATE);
+
+        // betService.save(&conn, &betEntity1);
+        // betService.save(&conn, &betEntity2);
+
+        cout << "FIND BY ID" << endl;
+        betService.findById(&conn, 3).value().toString();
+
+        cout << "FIND ALL" << endl;
+        optional<vector<BetEntity>> betFindAll = betService.findAll(&conn);
+        for (const auto& bet : betFindAll.value()) {
+            bet.toString();
+            cout << endl;
+        }
+
         // EventEntity user(0, "usuario5", "usuario5@email.com", "123", UserRoleEnum::USUARIO, 100);
         // SportEntity sport = sportService.findById(&conn, 2).value();
         // ParticipantsEntity p1 = participantsService.findById(&conn, 1).value();
@@ -32,27 +64,27 @@ int main() {
 
         // EventEntity entity(0, sport, p1, p2, arr, horario, status);
 
-        // std::optional<EventEntity> userAuth = userService.authUser(&conn, "user1@email.com", "123456");
-        // userService.save(&conn, &entity);
-        optional<vector<EventEntity>> userFindAll =  userService.findAll(&conn);
-        std::optional<EventEntity> userId = userService.findById(&conn, 1);
-        // std::optional<EventEntity> userEmail = userService.findByEmail(&conn, "user2@email.com");
+        // std::optional<EventEntity> userAuth = eventService.authUser(&conn, "user1@email.com", "123456");
+        // eventService.save(&conn, &entity);
+        // optional<vector<EventEntity>> userFindAll =  eventService.findAll(&conn);
+        // std::optional<EventEntity> userId = eventService.findById(&conn, 1);
+        // std::optional<EventEntity> userEmail = eventService.findByEmail(&conn, "user2@email.com");
 
         // cout << "UserAuth" << endl;
         // userAuth.value().toString();
         // cout << endl;
-        cout << "UserId" << endl;
-        userId.value().toString();
-        cout << endl;
+        // cout << "UserId" << endl;
+        // userId.value().toString();
+        // cout << endl;
         // cout << "UserEmail" << endl;
         // userEmail.value().toString();
         // cout << endl;
-        cout << "Users" << endl;
-        for (const auto& user : userFindAll.value()) {
-            user.toString();
-            cout << endl;
-        }
-        cout << endl;
+        // cout << "Users" << endl;
+        // for (const auto& user : userFindAll.value()) {
+        //     user.toString();
+        //     cout << endl;
+        // }
+        // cout << endl;
 
 
     } catch (const std::exception& e) {
