@@ -3,7 +3,7 @@
 BetEntity::BetEntity() 
     : id(0), amount(0.0) {}
 
-BetEntity::BetEntity(int id, const UserEntity& user, const EventEntity& event, double amount, const TypeOfBets& bet)
+BetEntity::BetEntity(int id, UserEntity user, EventEntity event, double amount, TypeOfBets bet)
     : id(id), user(user), event(event), amount(amount), bet(bet) {}
 
 int BetEntity::getId() const { return id; }

@@ -20,7 +20,7 @@ class BetEntity {
     public:
         BetEntity();
 
-        BetEntity(int id, const UserEntity& user, const EventEntity& event, double amount, const TypeOfBets& bet);
+        BetEntity(int id, UserEntity user, EventEntity event, double amount, TypeOfBets bet);
 
         int getId() const;
         void setId(int id);
