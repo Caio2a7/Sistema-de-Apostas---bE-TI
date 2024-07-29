@@ -25,3 +25,9 @@ std::string to_string(TypeOfBets typeBets) {
             return "EMPATE";
     }
 }
+
+TypeOfBets convertStringToTypeOfBetsEnum(const std::string& string) {
+    if (string == "VITORIA_TIME_A") return TypeOfBets::VITORIA_TIME_A;
+    if (string == "VITORIA_TIME_B") return TypeOfBets::VITORIA_TIME_B;
+    if (string == "EMPATE") return TypeOfBets::EMPATE;
+}

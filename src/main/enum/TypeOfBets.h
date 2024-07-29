@@ -14,4 +14,6 @@ std::ostream& operator<<(std::ostream& os, TypeOfBets typeBets);
 
 std::string to_string(TypeOfBets typeBets);
 
+TypeOfBets convertStringToTypeOfBetsEnum(const std::string& string);
+
 #endif
