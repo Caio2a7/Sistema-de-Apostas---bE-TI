@@ -4,6 +4,8 @@
 #include <string>
 #include "EventEntity.h"
 #include "UserEntity.h"
+#include "../enum/TablesDataBaseEnum.h"
+#include "../enum/TypeOfBets.h"
 
 using namespace std;
 
@@ -13,12 +15,12 @@ class BetEntity {
         UserEntity user;
         EventEntity event;
         double amount;
-        string bet;
+        TypeOfBets bet;
 
     public:
         BetEntity();
 
-        BetEntity(int id, const UserEntity& user, const EventEntity& event, double amount, const string& bet);
+        BetEntity(int id, UserEntity user, EventEntity event, double amount, TypeOfBets bet);
 
         int getId() const;
         void setId(int id);
@@ -32,8 +34,14 @@ class BetEntity {
         double getAmount() const;
         void setAmount(double amount);
 
-        string getBet() const;
-        void setBet(const string& bet);
+        TypeOfBets getBet() const;
+        void setBet(const TypeOfBets& bet);
+
+        TablesDataBaseEnum getTable() const;
+
+        std::vector<std::string> getColumns(); 
+
+        void toString() const;
 };
 
 #endif 
