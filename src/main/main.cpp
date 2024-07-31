@@ -15,12 +15,25 @@
 #include "enum/UserRoleEnum.h"
 #include "enum/EventStatusEnum.h"
 #include "enum/TypeOfBets.h"
+#include "infra/db/configure.h"
+#include "cli/index.h"
 
 int main() {
     try {
         // Criar uma conexão com o banco de dados
-        pqxx::connection conn("dbname=beti user=postgres password=root hostaddr=127.0.0.1 port=5432");
-        UserService userService;
+        //pqxx::connection conn("dbname=beti user=postgres password=root hostaddr=127.0.0.1 port=5432");
+        pqxx::connection *conn = connectDataBase();
+        UserEntity *user = new UserEntity;
+        UserService userServices;
+        int option = welcome();
+        if(option == 2){
+            *user = createAccount();
+            cout << "============================================" << endl;
+            cout << "           Mensagem Informática" << endl;
+            userServices.save(conn, user);
+            cout << "============================================" << endl;
+        }
+        /*UserService userService;
         EventService eventService;
         SportService sportService;
         BetService betService;
@@ -50,7 +63,7 @@ int main() {
             cout << endl;
         }
 
-        // EventEntity user(0, "usuario5", "usuario5@email.com", "123", UserRoleEnum::USUARIO, 100);
+        // EventEntity user(0, "user5", "user5@email.com", "123", UserRoleEnum::user, 100);
         // SportEntity sport = sportService.findById(&conn, 2).value();
         // ParticipantsEntity p1 = participantsService.findById(&conn, 1).value();
         // ParticipantsEntity p2 = participantsService.findById(&conn, 2).value();
@@ -87,9 +100,9 @@ int main() {
         // cout << endl;
 
 
+    */
     } catch (const std::exception& e) {
         std::cerr << "Erro ao conectar com o banco de dados: " << e.what() << std::endl;
     }
-
     return 0;
 }

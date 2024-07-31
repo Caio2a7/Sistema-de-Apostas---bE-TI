@@ -28,7 +28,8 @@ optional<UserEntity> UserService::authUser(pqxx::connection* conn, string email,
     return user;
 }
 
-void UserService::save(pqxx::connection *conn, UserEntity *user) {
+bool UserService::save(pqxx::connection *conn, UserEntity *user) {
+    try{
     UserRepository userRepository;
     QueryMetaData queryMetaData;
 
@@ -50,6 +51,7 @@ void UserService::save(pqxx::connection *conn, UserEntity *user) {
     w.commit();
 
     userRepository.save(conn, &queryMetaData);
+    }
 }
 
 optional<UserEntity> UserService::findById(pqxx::connection *conn, size_t id) {

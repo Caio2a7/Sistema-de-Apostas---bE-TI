@@ -63,7 +63,7 @@ pqxx::connection* connectDataBase() {
             delete conn; // Limpa o ponteiro em caso de falha
             exit(EXIT_FAILURE); // Encerra o programa com um código de erro
         }
-
+        loadTables(conn);
         return conn;
     } catch (const pqxx::failure& e) {
         cerr << "Não foi possível se conectar ao banco de dados: " << e.what() << endl;
