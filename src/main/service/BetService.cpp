@@ -66,6 +66,45 @@ optional<vector<BetEntity>> BetService::findAll(pqxx::connection *conn) {
     return nullopt;
 }
 
+optional<vector<BetEntity>> BetService::findAllByEventId(pqxx::connection *conn, size_t id) {
+    BetRepository BetRepository;
+    QueryMetaData queryMetaData;
+    setTableName(&queryMetaData);
+
+    optional<pqxx::result> res = BetRepository.findAllByEventId(conn, &queryMetaData, id);
+
+    if (res.has_value()) {
+        vector<BetEntity> value = processFindAll(conn, res.value());
+        
+        return value;
+    } 
+
+    return nullopt;
+}
+
+void BetService::closeBet(pqxx::connection *conn, size_t idEvent, TypeOfBets eventResult) {
+    UserService userService;
+    UserEntity user;
+    double newBalance;
+    double odd;
+    optional<vector<BetEntity>> bets = findAllByEventId(conn, idEvent);
+
+    cout << "CLOSE BETS" << endl;
+
+    if (bets.has_value()) {
+        for (const auto& bet : bets.value()) {
+            if (bet.getBet() == eventResult) {
+                user = bet.getUser();
+                odd = bet.getEvent().getOdds()[static_cast<int>(eventResult)];
+                cout << "Odd do evento: " << odd << endl;
+                newBalance = user.getBalance() + (odd * bet.getAmount());
+                user.setBalance(newBalance);
+                userService.update(conn, &user);
+            }
+        }
+    }
+}
+
 // Métodos privados
 
 void BetService::setTableName(QueryMetaData *queryMetaData) {

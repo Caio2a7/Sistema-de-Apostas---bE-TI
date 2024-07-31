@@ -17,6 +17,8 @@
 #include "../repository/BetRepository.h"
 #include "../entities/BetEntity.h"
 #include "../entities/EventEntity.h"
+#include "../entities/UserEntity.h"
+#include "../enum/TypeOfBets.h"
 
 using namespace std;
 
@@ -27,6 +29,10 @@ public:
     optional<BetEntity> findById(pqxx::connection *conn, size_t id);
 
     optional<vector<BetEntity>> findAll(pqxx::connection *conn);
+
+    optional<vector<BetEntity>> findAllByEventId(pqxx::connection *conn, size_t id);
+
+    void closeBet(pqxx::connection *conn, size_t idEvent, TypeOfBets eventResult);
 
 private:
     void setTableName(QueryMetaData *queryMetaData);
