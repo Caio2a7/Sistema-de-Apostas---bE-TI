@@ -10,11 +10,13 @@
 #include <chrono>
 #include <sstream>
 #include <ctime>
+#include <stdexcept>
 #include <pqxx/pqxx>
 #include "EventService.h"
 #include "UserService.h"
 #include "../repository/BetRepository.h"
 #include "../entities/BetEntity.h"
+#include "../entities/EventEntity.h"
 
 using namespace std;
 
@@ -31,7 +33,11 @@ private:
 
     BetEntity createEntityFromResult(pqxx::connection *conn, const pqxx::row& row);
 
-    std::vector<BetEntity> processFindAll(pqxx::connection *conn, pqxx::result res);
+    vector<BetEntity> processFindAll(pqxx::connection *conn, pqxx::result res);
+
+    tm convertStringToTm(const string& datetime);
+
+    bool isDateValid(const string& dateStr);
 };
 
 #endif
