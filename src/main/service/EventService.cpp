@@ -104,11 +104,10 @@ EventEntity EventService::createEntityFromResult(pqxx::connection *conn, const p
     std::string statusValue = row["status"].as<std::string>();
     EventStatusEnum statusEnum = convertStringToEventStatusEnum(statusValue);
 
-    std::array<double, 3> odds;
-    std::istringstream oddsStream(row["odds"].as<std::string>());
-    for (auto& odd : odds) {
-        oddsStream >> odd;
-    }
+    std::string stringOdds = row["odds"].as<std::string>();
+    std::cout << "Valor das ODDS: " << stringOdds << std::endl;
+
+    std::array<double, 3> odds = parseNumbers(stringOdds);
 
     return EventEntity(
         row["id"].as<size_t>(), 
@@ -137,3 +136,34 @@ vector<EventEntity> EventService::processFindAll(pqxx::connection *conn, pqxx::r
     return results;
 }
 
+// As odds serão retornadas do banco de dados nesse formato {n1,n2,n3}
+// Esse método irá pegar apenas os valores, adicioná-los em um array
+// e retornar esse array
+std::array<double, 3> EventService::parseNumbers(const std::string& str) {
+    std::array<double, 3> numbers;
+    std::string cleanedStr;
+    size_t index = 0;
+
+    for (char ch : str) {
+        // Remove caracteres '{', '}', e ','
+        if (ch != '{' && ch != '}' && ch != ',') {
+            cleanedStr += ch;
+        } else if (!cleanedStr.empty()) {
+            std::stringstream ss(cleanedStr);
+            double num;
+            ss >> num;
+            numbers[index++] = num;
+            cleanedStr.clear();
+        }
+    }
+
+    // Add the last number if there's any
+    if (!cleanedStr.empty() && index < numbers.size()) {
+        std::stringstream ss(cleanedStr);
+        double num;
+        ss >> num;
+        numbers[index] = num;
+    }
+
+    return numbers;
+}

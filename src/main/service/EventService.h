@@ -32,6 +32,8 @@ private:
     EventEntity createEntityFromResult(pqxx::connection *conn, const pqxx::row& row);
 
     std::vector<EventEntity> processFindAll(pqxx::connection *conn, pqxx::result res);
+
+    std::array<double, 3> parseNumbers(const std::string& str);
 };
 
 #endif
