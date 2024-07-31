@@ -16,6 +16,8 @@ using namespace std;
 class BetRepository : public CrudRepositoryImpl<BetEntity> {
     public:
         virtual ~BetRepository() = default;
+
+        optional<pqxx::result> findAllByEventId(pqxx::connection* conn, QueryMetaData *queryMetaData, size_t id);
 };
 
 #endif
