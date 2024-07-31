@@ -1,5 +1,6 @@
 #include "index.h"
-#define LINE_WIDTH 40
+#include <regex>
+#define LINE_WIDTH 60
 
 void welcome() {
     cout << "========================================================================================================================" << endl;
@@ -64,20 +65,55 @@ pair<string, string> authAccount(){
     return make_pair(email, password);
 }
 
-UserEntity createAccount() {
+bool isEmailCheck(const string& email){
+    const regex pattern(R"(^\S+@\S+\.\S+$)");
+    if(!regex_match(email, pattern)){
+        altLinesFormat("Email Inválido");
+        return false;
+    }
+
+    return true;
+}
+bool isPasswordCheck(const string& password){
+    if(password.length() < 6){
+        altLinesFormat("Senha fraca, deve possuir de 6 ou mais caracteres");
+        return false;
+    }
+    return true;
+}
+bool isPositiveCheck(double balance){
+    if(balance < 0){
+        altLinesFormat("Saldo Inválido");
+        return false;
+    }
+    return true;
+}
+optional<UserEntity> createAccount() {
     string name;
     string email;
     string password;
     double balance;
     linesFormat("CADASTRAR NOVO USUÁRIO");
+
     cout << "Nome: ";
     getline(cin, name);
+    
     cout << "Email: ";
     getline(cin, email);
+    if(!isEmailCheck(email)){
+        return nullopt;
+    }
+
     cout << "Senha: ";
     getline(cin, password);
+    if(!isPasswordCheck(password)){
+        return nullopt;
+    }
+
     cout << "Saldo inicial: ";
     cin >> balance;
-
+    if(!isPositiveCheck(balance)){
+        return nullopt;
+    }
     return UserEntity(0, name, email, password, UserRoleEnum::USUARIO, balance);
 }

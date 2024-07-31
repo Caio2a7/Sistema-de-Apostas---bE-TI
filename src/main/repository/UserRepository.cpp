@@ -37,9 +37,12 @@ optional<pqxx::result> UserRepository::findByEmail(pqxx::connection* conn, Query
         QueryBuilder queryBuilder;
         string query = queryBuilder.buildFindByEmailQuery(metaData, email);
 
-        pqxx::result result = executeSql(conn, query);
+        pqxx::result res = executeSql(conn, query);
+        if(res.empty()){
+            return std::nullopt;
+        }
 
-        return result;
+        return res;
     } catch (const pqxx::sql_error& e) {
         std::cerr << "Erro ao executar a consulta: " << e.what() << std::endl;
         std::cerr << "Consulta: " << e.query() << std::endl;

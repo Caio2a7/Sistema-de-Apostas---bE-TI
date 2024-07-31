@@ -24,7 +24,6 @@ int main() {
         // Criar uma conexão com o banco de dados
         //pqxx::connection conn("dbname=beti user=postgres password=root hostaddr=127.0.0.1 port=5432");
         pqxx::connection *conn = connectDataBase();
-        UserEntity *userData = new UserEntity;
         UserService userServices;
         size_t option;
         welcome();
@@ -33,13 +32,20 @@ int main() {
             if(option == 1){
                 pair<string, string> credentials = authAccount();
                 optional<UserEntity> user = userServices.authUser(conn, credentials.first, credentials.second);
-                
+                if(user){
+                    break;
+                }
                 
             }
             else if(option == 2){
-                *userData = createAccount();
-                bool isUserSaved = userServices.save(conn, userData);
-                isUserSaved ? altLinesFormat("Usuário cadastrado com sucesso!") : altLinesFormat("Fechando o programa!");
+                optional<UserEntity> userData = createAccount();
+                if(userData){
+                    bool isUserSaved = userServices.save(conn, &(*userData));
+                    if(isUserSaved){
+                        altLinesFormat("Usuário cadastrado com sucesso!");
+                        break;
+                    }
+                }
             }
         }while(option != 0);
     } catch (const std::exception& e) {
