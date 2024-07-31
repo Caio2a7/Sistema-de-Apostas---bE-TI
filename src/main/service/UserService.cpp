@@ -1,4 +1,5 @@
 #include "UserService.h"
+#include "../cli/index.h" 
 
 optional<UserEntity> UserService::authUser(pqxx::connection* conn, string email, string password) {
     QueryMetaData queryMetaData;
@@ -12,44 +13,48 @@ optional<UserEntity> UserService::authUser(pqxx::connection* conn, string email,
     optional<pqxx::result> res = userRepository.findByEmail(conn, &queryMetaData, email);
     
     if (!res.has_value()) {
-        cerr << "Usuário não encontrado" << endl;
+        altLinesFormat("Usuário não encontrado");
         return std::nullopt;
     }
 
     UserEntity user = userRepository.createEntityFromResult(res.value()[0]);
 
     if (!(password == user.getPassword())) {
-        cerr << "Senha não confere" << endl;
+        altLinesFormat("Senha não confere");
         return std::nullopt;
     }
-
-    cout << "Usuário autenticado com sucesso" << endl;
-
+    altLinesFormat("Usuário autenticado com sucesso");
     return user;
 }
 
-void UserService::save(pqxx::connection *conn, UserEntity *user) {
-    UserRepository userRepository;
-    QueryMetaData queryMetaData;
+bool UserService::save(pqxx::connection *conn, UserEntity *user) {
+    try{
+        UserRepository userRepository;
+        QueryMetaData queryMetaData;
 
-    pqxx::work w(*conn);
+        pqxx::work w(*conn);
 
-    setTableName(&queryMetaData);
-    queryMetaData.columns = user->getColumns();
+        setTableName(&queryMetaData);
+        queryMetaData.columns = user->getColumns();
 
-    std::vector<std::string> values;
-    values.push_back(userRepository.getCodeAutoIncrementId(user));
-    values.push_back(w.quote(user->getName()));
-    values.push_back(w.quote(user->getEmail()));
-    values.push_back(w.quote(user->getPassword()));
-    values.push_back(w.quote(to_string(user->getRole())));
-    values.push_back(w.quote(user->getBalance()));
+        std::vector<std::string> values;
+        values.push_back(userRepository.getCodeAutoIncrementId(user));
+        values.push_back(w.quote(user->getName()));
+        values.push_back(w.quote(user->getEmail()));
+        values.push_back(w.quote(user->getPassword()));
+        values.push_back(w.quote(to_string(user->getRole())));
+        values.push_back(w.quote(user->getBalance()));
 
-    queryMetaData.values = values;
+        queryMetaData.values = values;
 
-    w.commit();
+        w.commit();
 
-    userRepository.save(conn, &queryMetaData);
+        userRepository.save(conn, &queryMetaData);
+        return true;
+    } catch(runtime_error& erro){
+        cerr << "Erro: " << erro.what() << endl;
+        return false;
+    }
 }
 
 optional<UserEntity> UserService::findById(pqxx::connection *conn, size_t id) {

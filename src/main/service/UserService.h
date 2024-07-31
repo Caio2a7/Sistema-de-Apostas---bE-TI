@@ -15,7 +15,7 @@ class UserService {
     public:
         optional<UserEntity> authUser(pqxx::connection* conn, string email, string password);
         
-        void save(pqxx::connection *conn, UserEntity *user);
+        bool save(pqxx::connection *conn, UserEntity *user);
         
         optional<UserEntity> findById(pqxx::connection *conn, size_t id);
         
