@@ -18,10 +18,13 @@
 #include "infra/db/configure.h"
 #include "cli/index.h"
 
+
 int main() {
     try {
         pqxx::connection *conn = connectDataBase();
         UserService userServices;
+        ParticipantsService participantsService;
+        SportService sportService;
         EventService eventServices;
         BetService betServices;
         size_t option;
@@ -35,7 +38,6 @@ int main() {
                 if(user){
                     break;
                 }
-                
             }
             else if(option == 2){
                 optional<UserEntity> userData = createAccount();
@@ -53,11 +55,27 @@ int main() {
                     }
                 }
             }
+            else if(option == 0){
+                altLinesFormat("Saindo...Sentiremos sua falta;-;");
+            }else{
+                altLinesFormat("Digite uma opção válida");
+            }
         }while(option != 0);
+
+
+        optional<vector<EventEntity>> events;
+        optional<EventEntity> event;
+        optional<SportEntity> sport;
+        optional<ParticipantsEntity> participant;
+        optional<vector<BetEntity>> bets;
+        BetEntity *bet;
+        size_t eventId, betChoice;
+        TypeOfBets betType;
+        double amount;
+
         if(user && user->getRole() == UserRoleEnum::ADMIN){
             do{
                 option = adminMenu();
-                optional<vector<EventEntity>> events;
                 switch(option){
                     case 1:
                         events = eventServices.findAll(conn);
@@ -67,13 +85,20 @@ int main() {
                             }
                         }
                         break;
-                    case 2:
+                    case 2: 
                         break;
                     case 3:
+                        bets = betServices.findAll(conn);
+                        if(bets){
+                            for(const auto& bet : bets.value()){
+                                if(bet.getUser().getId() == user.value().getId()){
+                                    bet.toString();
+                                    cout << "\n";
+                                }
+                            }
+                        }
                         break;
                     case 4:
-                        break;
-                    case 5: 
                         if(user.has_value()) {
                             user = userServices.findById(conn, user.value().getId());
                             switch(account()) {
@@ -93,6 +118,38 @@ int main() {
                                 break;
                             }
                         }
+                    case 5: 
+                        sport = createSport();
+                        if(sport.has_value()) {
+                            SportEntity *newSport = new SportEntity;
+                            *newSport = sport.value();
+                            sportService.save(conn, newSport);
+                            delete(newSport);
+                        }
+                        break;
+                    case 6: 
+                        participant = createParticipant();
+                        if(participant.has_value()) {
+                            ParticipantsEntity *newParticipant = new ParticipantsEntity;
+                            *newParticipant = participant.value();
+                            participantsService.save(conn, newParticipant);
+                            delete(newParticipant);
+                        }
+                        break;
+                    case 7:
+                        event = createNewEvent(conn);
+                        if(event.has_value()) {
+                            EventEntity *newEvent = new EventEntity;
+                            *newEvent = event.value();
+                            eventServices.save(conn, newEvent);
+                            delete(newEvent);
+                        }
+                        break;
+                    case 8:
+                        changeEventStatus(conn);
+                        break;
+                    case 0: 
+                        altLinesFormat("Saindo...Sentiremos sua falta;-;");
                         break;
                     default:
                         altLinesFormat("Digite uma opção válida");
@@ -111,12 +168,12 @@ int main() {
                 double amount;
                 switch(option){
                     case 1:
-                        events = eventServices.findAll(conn);
-                        if(events){
-                            for (const auto& event : events.value()) {
-                                event.toString();
+                            events = eventServices.findAll(conn);
+                            if(events){
+                                for (const auto& event : events.value()) {
+                                    event.toString();
+                                }
                             }
-                        }
                         break;
                     case 2:
                         cout << "Digite o id do Evento: ";
