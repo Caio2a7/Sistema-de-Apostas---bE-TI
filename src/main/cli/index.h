@@ -19,6 +19,7 @@ using namespace std;
 void welcome();
 void linesFormat(const std::string& text);
 void altLinesFormat(const std::string& text);
+void tableFormat(const string& text, int type);
 size_t login();
 bool isEmailCheck();
 bool isPasswordCheck();

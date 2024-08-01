@@ -1,4 +1,6 @@
 #include "EventEntity.h"
+#include <string>
+#define TABLE_WIDTH 150
 
 EventEntity::EventEntity() 
     : id(0), odds({0.0, 0.0, 0.0}), time(0) {}
@@ -40,13 +42,16 @@ TablesDataBaseEnum EventEntity::getTable() const { return TablesDataBaseEnum::ev
 
 std::vector<std::string> EventEntity::getColumns() {
     return {"id", "id_esporte", "id_time_a", "id_time_b", "odds", "horario", "status"};
-}
+} 
 
 void EventEntity::toString() const {
-    cout << "ID: " << id << "\n";
-    cout << "Horário: " << time << endl;
-    cout << "Status: " << to_string(status) << endl;
-    cout << "Esporte:" << endl;
+    cout << "|" << string(4-to_string(id).length(), ' ') << id << string(3, ' ');
+    cout << "|" << string(3, ' ') << time << string(3, ' ');
+    cout << "|" << string(to_string(status).length()-4, ' ') << to_string(status) << string(5, ' ');
+    int sportLeftPadding = sport.getName().length() < 7 ? 8 : 8;
+    int sportRightPadding = sport.getName().length() < 7 ? 8+(8-sport.getName().length()) : (8*2) - sport.getName().length();
+    cout << "|" << string(sportLeftPadding, ' ') << sport.getName() << string(sportRightPadding, ' ') << "|" << endl;
+    /*cout << "Esporte:" << endl;
     sport.toString();
     cout << "Time A:" << endl;
     teamA.toString();
@@ -55,5 +60,5 @@ void EventEntity::toString() const {
     cout << "Odds:" << endl;
     for (const auto& odd : odds) {
         cout << odd << endl;
-    }
+    }*/
 }

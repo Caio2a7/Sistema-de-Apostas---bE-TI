@@ -1,7 +1,7 @@
 #include "index.h"
 #include <regex>
-#define LINE_WIDTH 60
 
+#define TABLE_WIDTH 78
 void welcome() {
     cout << "========================================================================================================================" << endl;
     cout << "\t\t\t\t\t$$\\                  $$\\  $$$$$$$$\\ $$$$$$\\  \n"
@@ -39,6 +39,28 @@ void altLinesFormat(const string& text) {
     cout << "#" <<string(leftPadding-1, ' ') << text << string(rightPadding, ' ') << "#" <<endl;
     cout << string(LINE_WIDTH, '#') << endl;
 }
+void tableFormat(const string& text, int type){
+    int totalPadding;
+    if(type == 0 || type == 3){
+        totalPadding = 3+text.length();
+    }
+    else if(type == 4){
+        totalPadding = 5+text.length();
+    }else { 
+        totalPadding = 10+text.length();
+    }
+    
+    int leftPadding = totalPadding/2;
+    int rightPadding = totalPadding - leftPadding;
+    if(type == 0) { 
+        cout << string(TABLE_WIDTH, '-') << endl; 
+    }
+    cout << '|' << string(leftPadding, ' ') << text << string(rightPadding, ' ');
+    if(type == 2) { 
+        cout << '|' <<'\n' << string(TABLE_WIDTH, '-') << endl;
+    }
+
+}  
 size_t login(){
     size_t option;
 

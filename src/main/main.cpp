@@ -62,6 +62,13 @@ int main() {
                     case 1:
                         events = eventServices.findAll(conn);
                         if(events){
+                            tableFormat("ID", 0);
+                            tableFormat("Horário", 1);
+                            tableFormat("Status", 1);
+                            tableFormat("Esporte", 1);
+                            tableFormat("Time A", 1);
+                            tableFormat("Time B", 1);
+                            tableFormat("Odds", 2);
                             for (const auto& event : events.value()) {
                                 event.toString();
                             }
@@ -113,8 +120,17 @@ int main() {
                     case 1:
                         events = eventServices.findAll(conn);
                         if(events){
+                            /*
+                            tableFormat("Time A", 1);
+                            tableFormat("Time B", 1);
+                            tableFormat("Odds", 2);*/
                             for (const auto& event : events.value()) {
+                                tableFormat("ID", 0);
+                                tableFormat("Horário", 1);
+                                tableFormat("Status", 4);
+                                tableFormat("Esporte", 2);
                                 event.toString();
+                                cout << '\n' << endl;
                             }
                         }
                         break;

@@ -51,7 +51,6 @@ class EventEntity {
         TablesDataBaseEnum getTable() const;
 
         std::vector<std::string> getColumns(); 
-
         void toString() const;
 };
 
