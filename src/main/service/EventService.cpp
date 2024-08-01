@@ -36,6 +36,38 @@ void EventService::save(pqxx::connection *conn, EventEntity *entity) {
     EventRepository.save(conn, &queryMetaData);
 }
 
+void EventService::update(pqxx::connection *conn, EventEntity *entity) {
+    EventRepository EventRepository;
+    QueryMetaData queryMetaData;
+    QueryBuilder queryBuilder;
+
+    pqxx::work w(*conn);
+
+    setTableName(&queryMetaData);
+    queryMetaData.columns = entity->getColumns();
+
+    calculateOdds(entity, entity->getTeamA(), entity->getTeamB());
+    std::array<double, 3> odds = entity->getOdds();
+    std::vector<double> vec(odds.begin(), odds.end());
+    
+    std::string valueOdds = queryBuilder.buildValueArray(vec);
+
+    std::vector<std::string> values;
+    values.push_back(w.quote(entity->getId()));
+    values.push_back(w.quote(entity->getSport().getId()));
+    values.push_back(w.quote(entity->getTeamA().getId()));
+    values.push_back(w.quote(entity->getTeamB().getId()));
+    values.push_back(w.quote(valueOdds));
+    values.push_back(w.quote(entity->getTime()));
+    values.push_back(w.quote(to_string(entity->getStatus())));
+
+    queryMetaData.values = values;
+
+    w.commit();
+
+    EventRepository.update(conn, &queryMetaData, entity->getId());
+}
+
 optional<EventEntity> EventService::findById(pqxx::connection *conn, size_t id) {
     EventRepository eventRepository;
     QueryMetaData queryMetaData;

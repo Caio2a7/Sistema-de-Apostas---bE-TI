@@ -23,6 +23,8 @@ class EventService {
 public:
     void save(pqxx::connection *conn, EventEntity *entity);
 
+    void update(pqxx::connection *conn, EventEntity *entity);
+
     optional<EventEntity> findById(pqxx::connection *conn, size_t id);
 
     optional<vector<EventEntity>> findAll(pqxx::connection *conn);
