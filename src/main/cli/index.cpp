@@ -88,6 +88,11 @@ bool isPositiveCheck(double balance){
     }
     return true;
 }
+bool isDateTimeCheck(const string &dateTime) {
+    // formato ano-mes-dia hora:minutos:segundos.centésimos
+    regex datetime_regex(R"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{2})");
+    return regex_match(dateTime, datetime_regex);
+}
 optional<UserEntity> createAccount() {
     string name;
     string email;
@@ -230,4 +235,73 @@ optional<ParticipantsEntity> createParticipant() {
     }
 
     return ParticipantsEntity(0, name, wins);
+}
+
+optional<EventEntity> createNewEvent(pqxx::connection *conn) {
+    SportService sportsService;
+    ParticipantsService participantsService;
+    EventService eventsService;
+
+    optional<SportEntity> sport;
+    optional<ParticipantsEntity> teamA;
+    optional<ParticipantsEntity> teamB;
+    optional<EventEntity> sport;
+
+    int sportId;
+    int aTeamId;
+    int bTeamId;
+    double oddTeamA;
+    double oddTeamB;
+    double oddTie;
+    string dateTime;
+    string statusStr;
+    EventStatusEnum status;
+
+    cout << "ID do esporte: ";
+    cin >> sportId;
+    sport = sportsService.findById(conn, sportId);
+    if(!sport) {
+        altLinesFormat("Esporte não existente!");
+        return nullopt;
+    }
+
+    cout << "ID do Time A: ";
+    cin >> aTeamId;
+    teamA = participantsService.findById(conn, aTeamId);
+    if(!teamA) {
+        altLinesFormat("Time não existente!");
+        return nullopt;
+    }
+
+    cout << "ID do Time B: ";
+    cin >> bTeamId;
+    teamB = participantsService.findById(conn, bTeamId);
+    if(!teamB) {
+        altLinesFormat("Time não existente!");
+        return nullopt;
+    }
+
+    cout << "Odd para o " << teamA.value().getName() << " vencer: ";
+    cin >> oddTeamA;
+
+    cout << "Odd para o Time B vencer: " << teamB.value().getName() << " vencer: ";
+    cin >> oddTeamB;
+
+    cout << "Odd para empatarem: ";
+    cin >> oddTie;
+    cin.ignore();
+
+    cout << "Dia e horário(ano-mes-dia hora:minutos:segundos.centésimos): ";
+    getline(cin, dateTime);
+    if(!isDateTimeCheck(dateTime)) {
+        altLinesFormat("Formato inválido!");
+        return nullopt;
+    }
+
+    cout << "Status do evento(AGENDADA || ANDAMENTO || FINALIZADA): ";
+    getline(cin, statusStr);
+
+    status = convertStringToEventStatusEnum(statusStr);
+
+    return EventEntity(0, sport.value(), teamA.value(), teamB.value(), {oddTeamA, oddTeamB, oddTie}, dateTime, status);
 }

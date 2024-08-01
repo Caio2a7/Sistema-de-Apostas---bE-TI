@@ -8,6 +8,10 @@
 #include "../entities/UserEntity.h"
 #include "../entities/ParticipantsEntity.h"
 #include "../entities/SportEntity.h"
+#include "../entities/EventEntity.h"
+#include "../service/ParticipantsService.h"
+#include "../service/SportService.h"
+#include "../service/EventService.h"
 #include "../enum/UserRoleEnum.h"
 
 using namespace std;
@@ -29,4 +33,5 @@ double depositAmount();
 double withdrawAmount();
 optional<SportEntity> createSport();
 optional<ParticipantsEntity> createParticipant();
+optional<EventEntity> createNewEvent();
 #endif
