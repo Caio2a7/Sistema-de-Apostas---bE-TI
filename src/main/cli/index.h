@@ -13,6 +13,7 @@
 #include "../service/SportService.h"
 #include "../service/EventService.h"
 #include "../enum/UserRoleEnum.h"
+#include "../repository/utils/QueryBuilder.h"
 
 using namespace std;
 
@@ -36,4 +37,5 @@ double withdrawAmount();
 optional<SportEntity> createSport();
 optional<ParticipantsEntity> createParticipant();
 optional<EventEntity> createNewEvent(pqxx::connection *conn);
+bool changeEventStatus(pqxx::connection *conn);
 #endif

@@ -17,11 +17,15 @@
 #include "enum/TypeOfBets.h"
 #include "infra/db/configure.h"
 #include "cli/index.h"
+using namespace std;
+
 
 int main() {
     try {
         pqxx::connection *conn = connectDataBase();
         UserService userServices;
+        ParticipantsService participantsService;
+        SportService sportService;
         EventService eventServices;
         BetService betServices;
         size_t option;
@@ -69,6 +73,7 @@ int main() {
         size_t eventId, betChoice;
         TypeOfBets betType;
         double amount;
+
         if(user && user->getRole() == UserRoleEnum::ADMIN){
             do{
                 option = adminMenu();
@@ -77,17 +82,99 @@ int main() {
                         events = eventServices.findAll(conn);
                         if(events){
                             for (const auto& event : events.value()) {
-                                tableFormat("ID", 0);
-                                tableFormat("Horário", 1);
-                                tableFormat("Status", 4);
-                                tableFormat("Esporte", 1);
-                                tableFormat("Odd vitória time A", 6);
-                                tableFormat("Odd vitória time B", 6);
-                                tableFormat("Odd empate", 2);
                                 event.toString();
-                                cout << '\n' << endl;
                             }
                         }
+                        break;
+                    case 2: 
+                        break;
+                    case 3:
+                        bets = betServices.findAll(conn);
+                        if(bets){
+                            for(const auto& bet : bets.value()){
+                                if(bet.getUser().getId() == user.value().getId()){
+                                    bet.toString();
+                                    cout << "\n";
+                                }
+                            }
+                        }
+                        break;
+                    case 4:
+                        if(user.has_value()) {
+                            user = userServices.findById(conn, user.value().getId());
+                            switch(account()) {
+                            case 1: 
+                                userServices.deposit(conn, user.value());
+                                break;
+                            case 2: 
+                                userServices.withdraw(conn, user.value());    
+                                break;
+                            case 3:
+                                linesFormat("CONTA");
+                                cout << user.value().getBalance() << "R$" << endl;
+                                break;
+                            case 0: break;
+                            default: 
+                                altLinesFormat("Digite uma opção válida"); 
+                                break;
+                            }
+                        }
+                    case 5: 
+                        sport = createSport();
+                        if(sport.has_value()) {
+                            SportEntity *newSport = new SportEntity;
+                            *newSport = sport.value();
+                            sportService.save(conn, newSport);
+                            delete(newSport);
+                        }
+                        break;
+                    case 6: 
+                        participant = createParticipant();
+                        if(participant.has_value()) {
+                            ParticipantsEntity *newParticipant = new ParticipantsEntity;
+                            *newParticipant = participant.value();
+                            participantsService.save(conn, newParticipant);
+                            delete(newParticipant);
+                        }
+                        break;
+                    case 7:
+                        event = createNewEvent(conn);
+                        if(event.has_value()) {
+                            EventEntity *newEvent = new EventEntity;
+                            *newEvent = event.value();
+                            eventServices.save(conn, newEvent);
+                            delete(newEvent);
+                        }
+                        break;
+                    case 8:
+                        changeEventStatus(conn);
+                        break;
+                    case 0:  
+                        altLinesFormat("Saindo...Sentiremos sua falta;-;");
+                        break;
+                    default:
+                        altLinesFormat("Digite uma opção válida");
+                        break;
+                }
+            } while(option != 0);
+        }else if(user->getRole() == UserRoleEnum::USUARIO){
+            do{
+                option = menu();
+                optional<vector<EventEntity>> events;
+                optional<EventEntity> event;
+                optional<vector<BetEntity>> bets;
+                BetEntity *bet;
+                size_t eventId, betChoice;
+                TypeOfBets betType;
+                double amount;
+                switch(option){
+                    case 1:
+                            events = eventServices.findAll(conn);
+                            if(events){
+                                for (const auto& event : events.value()) {
+                                    event.toString();
+                                }
+                            }
                         break;
                     case 2:
                         cout << "Digite o id do Evento: ";

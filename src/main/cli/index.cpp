@@ -224,7 +224,8 @@ size_t adminMenu(){
     cout << "2) Setar jogos" << endl;
     cout << "3) Apostar" << endl;
     cout << "4) Status das apostas" << endl;
-    cout << "5) Conta" << endl;
+    cout << "5) Mudar status de eventos" << endl;
+    cout << "6) Conta" << endl;
     cout << "0) Sair" << endl;
     cout << "Escolha a sua opção: ";
     cin >> option;
@@ -302,7 +303,7 @@ optional<ParticipantsEntity> createParticipant() {
         return nullopt;
     }
 
-    cout << "Quantidade de vitórias do participante";
+    cout << "Quantidade de vitórias do " << name << ": ";
     cin >> wins;
     getchar();
 
@@ -316,6 +317,7 @@ optional<ParticipantsEntity> createParticipant() {
 
 optional<EventEntity> createNewEvent(pqxx::connection *conn) {
     SportService sportsService;
+    EventService eventService;
     ParticipantsService participantsService;
 
     optional<SportEntity> sport;
@@ -325,9 +327,7 @@ optional<EventEntity> createNewEvent(pqxx::connection *conn) {
     int sportId;
     int aTeamId;
     int bTeamId;
-    double oddTeamA;
-    double oddTeamB;
-    double oddTie;
+    
     string dateTime;
     string statusStr;
     EventStatusEnum status;
@@ -337,15 +337,19 @@ optional<EventEntity> createNewEvent(pqxx::connection *conn) {
     cout << "ID do esporte: ";
     cin >> sportId;
     sport = sportsService.findById(conn, sportId);
-    if(!sport) {
+    if(!sport) { //Não prossegue caso o esporte não exista
         altLinesFormat("Esporte não existente!");
         return nullopt;
+    }
+
+    if(sport.has_value()) {
+        linesFormat(sport.value().getName());
     }
 
     cout << "ID do Time A: ";
     cin >> aTeamId;
     teamA = participantsService.findById(conn, aTeamId);
-    if(!teamA) {
+    if(!teamA) { //Não prossegue caso o time não exista
         altLinesFormat("Time não existente!");
         return nullopt;
     }
@@ -353,24 +357,14 @@ optional<EventEntity> createNewEvent(pqxx::connection *conn) {
     cout << "ID do Time B: ";
     cin >> bTeamId;
     teamB = participantsService.findById(conn, bTeamId);
-    if(!teamB) {
+    if(!teamB) { //Não prossegue caso o time não exista
         altLinesFormat("Time não existente!");
         return nullopt;
     }
 
-    cout << "Odd para o " << teamA.value().getName() << " vencer: ";
-    cin >> oddTeamA;
-
-    cout << "Odd para o Time B vencer: " << teamB.value().getName() << " vencer: ";
-    cin >> oddTeamB;
-
-    cout << "Odd para empatarem: ";
-    cin >> oddTie;
-    cin.ignore();
-
     cout << "Dia e horário(ano-mes-dia hora:minutos:segundos.centésimos): ";
     getline(cin, dateTime);
-    if(!isDateTimeCheck(dateTime)) {
+    if(!isDateTimeCheck(dateTime)) { // Não prossegue se a data não for no formato especificado
         altLinesFormat("Formato inválido!");
         return nullopt;
     }
@@ -380,5 +374,64 @@ optional<EventEntity> createNewEvent(pqxx::connection *conn) {
 
     status = convertStringToEventStatusEnum(statusStr);
 
-    return EventEntity(0, sport.value(), teamA.value(), teamB.value(), {oddTeamA, oddTeamB, oddTie}, dateTime, status);
+    return EventEntity(0, sport.value(), teamA.value(), teamB.value(), {0, 0, 0}, dateTime, status);
 }
+
+bool changeEventStatus(pqxx::connection *conn) {
+    EventService eventServices;
+    optional<vector<EventEntity>> events;
+    optional<EventEntity> event;
+
+    QueryMetaData *queryMetaData = new QueryMetaData;
+    QueryBuilder queryBuilder;
+
+    int eventId;
+    string status;
+
+    linesFormat("EVENTOS");
+
+    events = eventServices.findAll(conn);
+    if(events) {
+        for (const auto& event : events.value()) {
+            event.toString();
+        }
+    }
+
+    cout << "ID do evento que você deseja alterar o status: ";
+    cin >> eventId;
+    cin.ignore();
+
+    event = eventServices.findById(conn, eventId);
+
+    if(!event) {
+        altLinesFormat("Evento não existente!");
+        return false; // Se o evento não existir, não prossegue
+    }
+
+    cout << "Novo status(AGENDADA || ANDAMENTO || FINALIZADA): ";
+    getline(cin, status);
+
+    queryMetaData->tableName = "eventos";
+    queryMetaData->columns = {"status"};
+
+    try {
+        pqxx::work w(*conn);
+
+        queryMetaData->values = {w.quote(status)};
+        string sql = queryBuilder.buildUpdateQuery(queryMetaData, eventId);
+        
+        // Execute SQL dentro da transação
+        pqxx::result res = w.exec(sql);
+        
+        // Commit da transação
+        w.commit();
+        
+        if(res.affected_rows() > 0) {
+            return true;
+        }   
+    } catch(const std::exception &e) {
+        cerr << "Erro ao atualizar o status do evento: " << e.what() << std::endl;
+        return false;
+    }
+}
+   
