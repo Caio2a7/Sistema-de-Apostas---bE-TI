@@ -14,6 +14,8 @@ using namespace std;
 class ParticipantsService {
     public:
         void save(pqxx::connection *conn, ParticipantsEntity *entity);
+
+        void update(pqxx::connection *conn, ParticipantsEntity *Participants);
         
         optional<ParticipantsEntity> findById(pqxx::connection *conn, size_t id);
         

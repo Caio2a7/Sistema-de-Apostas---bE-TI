@@ -14,9 +14,9 @@ void EventService::save(pqxx::connection *conn, EventEntity *entity) {
     setTableName(&queryMetaData);
     queryMetaData.columns = entity->getColumns();
 
-    std::array<double, 3> arr = entity->getOdds();
-
-    std::vector<double> vec(arr.begin(), arr.end());
+    calculateOdds(entity, entity->getTeamA(), entity->getTeamB());
+    std::array<double, 3> odds = entity->getOdds();
+    std::vector<double> vec(odds.begin(), odds.end());
     
     std::string valueOdds = queryBuilder.buildValueArray(vec);
 
@@ -36,6 +36,38 @@ void EventService::save(pqxx::connection *conn, EventEntity *entity) {
     EventRepository.save(conn, &queryMetaData);
 }
 
+void EventService::update(pqxx::connection *conn, EventEntity *entity) {
+    EventRepository EventRepository;
+    QueryMetaData queryMetaData;
+    QueryBuilder queryBuilder;
+
+    pqxx::work w(*conn);
+
+    setTableName(&queryMetaData);
+    queryMetaData.columns = entity->getColumns();
+
+    calculateOdds(entity, entity->getTeamA(), entity->getTeamB());
+    std::array<double, 3> odds = entity->getOdds();
+    std::vector<double> vec(odds.begin(), odds.end());
+    
+    std::string valueOdds = queryBuilder.buildValueArray(vec);
+
+    std::vector<std::string> values;
+    values.push_back(w.quote(entity->getId()));
+    values.push_back(w.quote(entity->getSport().getId()));
+    values.push_back(w.quote(entity->getTeamA().getId()));
+    values.push_back(w.quote(entity->getTeamB().getId()));
+    values.push_back(w.quote(valueOdds));
+    values.push_back(w.quote(entity->getTime()));
+    values.push_back(w.quote(to_string(entity->getStatus())));
+
+    queryMetaData.values = values;
+
+    w.commit();
+
+    EventRepository.update(conn, &queryMetaData, entity->getId());
+}
+
 optional<EventEntity> EventService::findById(pqxx::connection *conn, size_t id) {
     EventRepository eventRepository;
     QueryMetaData queryMetaData;
@@ -50,7 +82,7 @@ optional<EventEntity> EventService::findById(pqxx::connection *conn, size_t id) 
     } 
 
     return nullopt;
- }
+}
 
 optional<vector<EventEntity>> EventService::findAll(pqxx::connection *conn) {
     EventRepository eventRepository;
@@ -166,4 +198,35 @@ std::array<double, 3> EventService::parseNumbers(const std::string& str) {
     }
 
     return numbers;
+}
+
+void EventService::calculateOdds(EventEntity *event, ParticipantsEntity teamA, ParticipantsEntity teamB) {
+    std::array<double, 3> odds = calculateOddsHelper(teamA.getVictorys(), teamB.getVictorys());
+
+    event->setOdds(odds);
+}
+
+std::array<double, 3> EventService::calculateOddsHelper(size_t winsTeamA, size_t winsTeamB) {
+    // FORMULA UTILIZADA
+    // odd = (winsTeamA / 0.4) / ( (winsTeamA / 0.4) +  (winsTeamB / 0.4) )
+    // O resultado obtido estará em porcentagem 
+    // e vai precisar ser convertido para decimal
+    if (winsTeamA == 0) winsTeamA += 1;
+    if (winsTeamB == 0) winsTeamB += 1;
+
+    const double NORMALIZER = 0.4;
+    double numerator = winsTeamA / NORMALIZER;
+    double denominator = numerator + (winsTeamB / NORMALIZER);
+    double result = numerator / denominator;
+
+    // Transforma odd em porcetagem para decimal
+    std::array<double, 3> odds;
+    double oddTeamA = 1 / result;
+    double oddTeamB = 1 / (1 - result); 
+    double oddDraw  = (oddTeamA + oddTeamB) / 2; // Empate
+    odds[0] = oddTeamA;
+    odds[1] = oddTeamB;
+    odds[2] = oddDraw;
+
+    return odds;
 }

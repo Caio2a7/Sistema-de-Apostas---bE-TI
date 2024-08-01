@@ -83,15 +83,32 @@ optional<vector<BetEntity>> BetService::findAllByEventId(pqxx::connection *conn,
 }
 
 void BetService::closeBet(pqxx::connection *conn, size_t idEvent, TypeOfBets eventResult) {
+    ParticipantsService participantsService;
     UserService userService;
+    EventService eventService;
     UserEntity user;
     double newBalance;
     double odd;
+    optional<EventEntity> event = eventService.findById(conn, idEvent);
+
+    if (!event.has_value()) {
+        std::cerr << "Evento não existe" << std::endl;
+        return;
+    }
+
     optional<vector<BetEntity>> bets = findAllByEventId(conn, idEvent);
 
     cout << "CLOSE BETS" << endl;
 
     if (bets.has_value()) {
+        if (event.value().getStatus() == EventStatusEnum::FINALIZADA) {
+                std::cerr << "Tentando finalizar uma partida já encerrada" << std::endl;
+                return;
+        }
+
+        event.value().setStatus(EventStatusEnum::FINALIZADA);
+        eventService.update(conn, &event.value());
+
         for (const auto& bet : bets.value()) {
             if (bet.getBet() == eventResult) {
                 user = bet.getUser();
@@ -100,6 +117,25 @@ void BetService::closeBet(pqxx::connection *conn, size_t idEvent, TypeOfBets eve
                 newBalance = user.getBalance() + (odd * bet.getAmount());
                 user.setBalance(newBalance);
                 userService.update(conn, &user);
+
+                switch (eventResult) {
+                    case TypeOfBets::VITORIA_TIME_A:
+                        {
+                            ParticipantsEntity teamA = bet.getEvent().getTeamA();
+                            teamA.setVictorys(teamA.getVictorys() + 1);
+                            participantsService.update(conn, &teamA);
+                        }
+                        break;
+                    case TypeOfBets::VITORIA_TIME_B:
+                        {
+                            ParticipantsEntity teamB = bet.getEvent().getTeamB();
+                            teamB.setVictorys(teamB.getVictorys() + 1);
+                            participantsService.update(conn, &teamB);
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

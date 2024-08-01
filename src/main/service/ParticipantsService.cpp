@@ -21,6 +21,29 @@ void ParticipantsService::save(pqxx::connection *conn, ParticipantsEntity *entit
     participantsRepository.save(conn, &queryMetaData);
 }
 
+void ParticipantsService::update(pqxx::connection *conn, ParticipantsEntity *participants) {
+    ParticipantsRepository participantsRepository;
+    QueryMetaData queryMetaData;
+
+    pqxx::work w(*conn);
+
+    setTableName(&queryMetaData);
+    queryMetaData.columns = participants->getColumns();
+
+    size_t participantsId = participants->getId();
+
+    std::vector<std::string> values;
+    values.push_back(w.quote(participantsId));
+    values.push_back(w.quote(participants->getName()));
+    values.push_back(w.quote(participants->getVictorys()));
+
+    queryMetaData.values = values;
+
+    w.commit();
+
+    participantsRepository.update(conn, &queryMetaData, participantsId);
+}
+
 optional<ParticipantsEntity> ParticipantsService::findById(pqxx::connection *conn, size_t id) {
     ParticipantsRepository participantsRepository;
     QueryMetaData queryMetaData;
