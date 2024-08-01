@@ -14,10 +14,12 @@
 #include <pqxx/pqxx>
 #include "EventService.h"
 #include "UserService.h"
+#include "ParticipantsService.h"
 #include "../repository/BetRepository.h"
 #include "../entities/BetEntity.h"
 #include "../entities/EventEntity.h"
 #include "../entities/UserEntity.h"
+#include "../entities/ParticipantsEntity.h"
 #include "../enum/TypeOfBets.h"
 
 using namespace std;
