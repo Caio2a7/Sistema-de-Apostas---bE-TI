@@ -15,6 +15,7 @@
 #include "ParticipantsService.h"
 #include "../repository/EventRepository.h"
 #include "../entities/EventEntity.h"
+#include "../entities/ParticipantsEntity.h"
 
 using namespace std;
 
@@ -34,6 +35,10 @@ private:
     std::vector<EventEntity> processFindAll(pqxx::connection *conn, pqxx::result res);
 
     std::array<double, 3> parseNumbers(const std::string& str);
+
+    void calculateOdds(EventEntity *entity, ParticipantsEntity teamA, ParticipantsEntity teamB);
+
+    std::array<double, 3> calculateOddsHelper(size_t winsTeamA, size_t winsTeamB);
 };
 
 #endif
