@@ -53,7 +53,7 @@ void EventEntity::toString() const {
     cout << "Time B:" << endl;
     teamB.toString();
     cout << "Odds:" << endl;
-    for (const auto& a : odds) {
-        cout << a << endl;
+    for (const auto& odd : odds) {
+        cout << odd << endl;
     }
 }

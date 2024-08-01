@@ -11,7 +11,6 @@ using namespace std;
 
 class BetEntity {
     private:
-        int id;
         UserEntity user;
         EventEntity event;
         double amount;
@@ -20,10 +19,7 @@ class BetEntity {
     public:
         BetEntity();
 
-        BetEntity(int id, UserEntity user, EventEntity event, double amount, TypeOfBets bet);
-
-        int getId() const;
-        void setId(int id);
+        BetEntity(UserEntity user, EventEntity event, double amount, TypeOfBets bet);
 
         UserEntity getUser() const;
         void setUser(const UserEntity& user);

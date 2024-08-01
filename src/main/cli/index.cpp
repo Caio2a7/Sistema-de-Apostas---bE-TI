@@ -116,4 +116,37 @@ optional<UserEntity> createAccount() {
         return nullopt;
     }
     return UserEntity(0, name, email, password, UserRoleEnum::USUARIO, balance);
+};
+
+size_t menu(){
+    size_t option;
+
+    linesFormat("MENU");
+    cout << "1) Ver jogos" << endl;
+    cout << "2) Apostar" << endl;
+    cout << "3) Status das apostas" << endl;
+    cout << "4) Conta" << endl;
+    cout << "0) Sair" << endl;
+    cout << "Escolha a sua opção: ";
+    cin >> option;
+    getchar();
+
+    return option;
+}
+
+size_t adminMenu(){
+    size_t option;
+
+    linesFormat("MENU");
+    cout << "1) Ver jogos" << endl;
+    cout << "2) Setar jogos" << endl;
+    cout << "3) Apostar" << endl;
+    cout << "4) Status das apostas" << endl;
+    cout << "5) Conta" << endl;
+    cout << "0) Sair" << endl;
+    cout << "Escolha a sua opção: ";
+    cin >> option;
+    getchar();
+
+    return option;
 }
