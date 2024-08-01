@@ -22,6 +22,8 @@ class BetEntity {
 
         BetEntity(int id, UserEntity user, EventEntity event, double amount, TypeOfBets bet);
 
+        BetEntity(UserEntity user, EventEntity event, double amount, TypeOfBets bet);
+
         int getId() const;
         void setId(int id);
 

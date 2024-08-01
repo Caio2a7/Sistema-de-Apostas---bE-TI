@@ -5,6 +5,9 @@ BetEntity::BetEntity()
 
 BetEntity::BetEntity(int id, UserEntity user, EventEntity event, double amount, TypeOfBets bet)
     : id(id), user(user), event(event), amount(amount), bet(bet) {}
+BetEntity::BetEntity(UserEntity user, EventEntity event, double amount, TypeOfBets bet)
+    : id(0), user(user), event(event), amount(amount), bet(bet) {}
+
 
 int BetEntity::getId() const { return id; }
 void BetEntity::setId(int id) { this->id = id; }

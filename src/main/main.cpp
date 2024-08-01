@@ -18,20 +18,20 @@
 #include "infra/db/configure.h"
 #include "cli/index.h"
 
-
 int main() {
     try {
-        // Criar uma conexão com o banco de dados
-        //pqxx::connection conn("dbname=beti user=postgres password=root hostaddr=127.0.0.1 port=5432");
         pqxx::connection *conn = connectDataBase();
         UserService userServices;
+        EventService eventServices;
+        BetService betServices;
         size_t option;
+        optional<UserEntity> user;
         welcome();
         do{
             option = login();
             if(option == 1){
                 pair<string, string> credentials = authAccount();
-                optional<UserEntity> user = userServices.authUser(conn, credentials.first, credentials.second);
+                user = userServices.authUser(conn, credentials.first, credentials.second);
                 if(user){
                     break;
                 }
@@ -48,6 +48,93 @@ int main() {
                 }
             }
         }while(option != 0);
+        if(user && user->getRole() == UserRoleEnum::ADMIN){
+            do{
+                option = adminMenu();
+                optional<vector<EventEntity>> events;
+                switch(option){
+                    case 1:
+                        events = eventServices.findAll(conn);
+                        if(events){
+                            for (const auto& event : events.value()) {
+                                event.toString();
+                            }
+                        }
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    default:
+                        altLinesFormat("Digite uma opção válida");
+                        break;
+                }
+            } while(option != 0);
+        }else if(user->getRole() == UserRoleEnum::USUARIO){
+            do{
+                option = menu();
+                optional<vector<EventEntity>> events;
+                optional<EventEntity> event;
+                optional<vector<BetEntity>> bets;
+                BetEntity *bet;
+                size_t eventId, betChoice;
+                TypeOfBets betType;
+                double amount;
+                switch(option){
+                    case 1:
+                        events = eventServices.findAll(conn);
+                        if(events){
+                            for (const auto& event : events.value()) {
+                                event.toString();
+                            }
+                        }
+                        break;
+                    case 2:
+                        cout << "Digite o id do Evento: ";
+                        cin >> eventId;
+                        getchar();
+                        event = eventServices.findById(conn, eventId);
+                        
+                        cout << "Digite o valor a ser apostado: ";
+                        cin >> amount;
+                        getchar();
+                        
+                        cout << "1) " << event.value().getTeamA().getName() << " vencedor" << endl;
+                        cout << "2) " << event.value().getTeamB().getName() << " vencedor" << endl;
+                        cout << "3) Empate" << endl;
+                        cout << "Escolha uma das opções de aposta: ";
+                        cin >> betChoice;
+                        getchar();
+                        if(betChoice == 1){ betType = TypeOfBets::VITORIA_TIME_A; }
+                        if(betChoice == 2){ betType = TypeOfBets::VITORIA_TIME_B; }
+                        if(betChoice == 3){ betType = TypeOfBets::EMPATE; }
+
+                        bet = new BetEntity(user.value(), event.value(), amount, betType);
+                        betServices.save(conn, bet);
+                        altLinesFormat("Aposta feita com sucesso!");    
+                        break;
+                    case 3:
+                        bets = betServices.findAll(conn);
+                        if(bets){
+                            for(const auto& bet : bets.value()){
+                                if(bet.getUser().getId() == user.value().getId()){
+                                    bet.toString();
+                                }
+                            }
+                        }
+                        break;
+                    case 4:
+                        break;
+                    default:
+                        altLinesFormat("Digite uma opção válida");
+                        break;
+                }
+            } while(option != 0);
+        }
     } catch (const std::exception& e) {
         std::cerr << "Erro ao conectar com o banco de dados: " << e.what() << std::endl;
     }

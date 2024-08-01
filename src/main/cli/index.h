@@ -19,5 +19,6 @@ bool isPasswordCheck();
 bool isPositiveCheck();
 pair<string, string> authAccount();
 optional<UserEntity> createAccount();
-
+size_t menu();
+size_t adminMenu();
 #endif
