@@ -1,7 +1,8 @@
 #include "index.h"
 #include <regex>
-#define LINE_WIDTH 60
 
+#define TABLE_WIDTH 78
+#define TABLE_WIDTH_BIG 159
 void welcome() {
     cout << "========================================================================================================================" << endl;
     cout << "\t\t\t\t\t$$\\                  $$\\  $$$$$$$$\\ $$$$$$\\  \n"
@@ -39,6 +40,82 @@ void altLinesFormat(const string& text) {
     cout << "#" <<string(leftPadding-1, ' ') << text << string(rightPadding, ' ') << "#" <<endl;
     cout << string(LINE_WIDTH, '#') << endl;
 }
+void teamTableFormat(pair<string, string> teams, pair<int, int> teamsVic) {
+    int leftPadding = 11;
+    int rightPadding = 10;
+ 
+    cout << string(TABLE_WIDTH-19, '-'); 
+    cout << string(11, ' ') << string(TABLE_WIDTH-19, '-') << endl;
+    
+    cout << '|' << string(leftPadding, ' ') << "Time A" << string(rightPadding, ' ');
+    cout << '|' << string(leftPadding, ' ') << "Vitórias" << string(rightPadding, ' ') << '|';
+    
+    cout << string(11, ' ') << '|' << string(leftPadding, ' ') << "Time B" << string(rightPadding, ' ');
+    cout << '|' << string(leftPadding, ' ') << "Vitórias" << string(rightPadding, ' ') << '|' << endl;
+    
+    cout << string(TABLE_WIDTH-19, '-'); 
+    cout << string(11, ' ') << string(TABLE_WIDTH-19, '-') << endl;
+    
+    if(teams.first.length() > 11){
+        leftPadding = 11 - (teams.first.length()-9);
+
+        rightPadding = 10 - (teams.first.length()-9);
+    }else if(teams.first.length() > 6){
+        leftPadding = 11;
+        rightPadding = 10 - (teams.first.length()-6);
+    }else{
+        leftPadding = 11 + (6-teams.first.length());
+    }
+
+    cout << '|' << string(leftPadding, ' ') << teams.first << string(rightPadding, ' ');
+    leftPadding = 11;
+    rightPadding = 10-(to_string(teamsVic.first).length())-1;
+    cout << '|' << string(leftPadding, ' ') << teamsVic.first << " vitórias" << string(rightPadding, ' ') << '|';
+
+    cout << string(11, ' ');
+    if(teams.second.length() > 11){
+        leftPadding = 11 - (teams.second.length()-9);
+
+        rightPadding = 10 - (teams.second.length()-9);
+    }else if(teams.second.length() > 6){
+        leftPadding = 11;
+        rightPadding = 10 - (teams.second.length()-6);
+    }else{
+        leftPadding = 11;
+        rightPadding = 10 - (teams.second.length()-6);
+    }
+
+    cout << '|' << string(leftPadding, ' ') << teams.second << string(rightPadding, ' ');
+    leftPadding = 11;
+    rightPadding = 10-(to_string(teamsVic.second).length())-1;
+    cout << '|' << string(leftPadding, ' ') << teamsVic.second << " vitórias" << string(rightPadding, ' ') << '|' << endl;
+    cout << string(TABLE_WIDTH-19, '-'); 
+    cout << string(11, ' ') << string(TABLE_WIDTH-19, '-') << endl;
+}
+void tableFormat(const string& text, int type){
+    int totalPadding;
+    if(type == 0 || type == 3){
+        totalPadding = 3+text.length();
+    }
+    else if(type == 4){
+        totalPadding = 5+text.length();
+    }else if(type == 6){
+        totalPadding = text.length()-13;
+    }
+    else { 
+        totalPadding = 10+text.length();
+    }
+    
+    int leftPadding = totalPadding/2;
+    int rightPadding = totalPadding - leftPadding;
+    if(type == 0) { 
+        cout << string(TABLE_WIDTH_BIG, '-') << endl; 
+    }
+    cout << '|' << string(leftPadding, ' ') << text << string(rightPadding, ' ');
+    if(type == 2) { 
+        cout << '|' <<'\n' << string(TABLE_WIDTH_BIG, '-') << endl;
+    }
+}  
 size_t login(){
     size_t option;
 
