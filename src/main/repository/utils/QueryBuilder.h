@@ -109,6 +109,16 @@ class QueryBuilder {
         oss << "}";
         return oss.str();
     }
+
+    string buildFindAllByEventIdQuery(QueryMetaData *metaData, size_t eventId) {
+        ostringstream query;
+        query << "SELECT * FROM " << metaData->tableName  
+              << " WHERE id_evento = " << eventId << ";";
+
+        cout << "Query: " << query.str() << endl;
+
+        return query.str();
+    }
 };
 
 #endif

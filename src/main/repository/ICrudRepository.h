@@ -22,6 +22,8 @@ public:
     virtual string getCodeAutoIncrementId(T* entity) = 0;
     
     virtual void save(pqxx::connection* conn, QueryMetaData *queryMetaData);
+
+    virtual void update(pqxx::connection* conn, QueryMetaData *queryMetaData, size_t id);
     
     optional<pqxx::result> findById(pqxx::connection* conn, QueryMetaData *queryMetaData, size_t id);
 

@@ -57,6 +57,32 @@ bool UserService::save(pqxx::connection *conn, UserEntity *user) {
     }
 }
 
+void UserService::update(pqxx::connection *conn, UserEntity *user) {
+    UserRepository userRepository;
+    QueryMetaData queryMetaData;
+
+    pqxx::work w(*conn);
+
+    setTableName(&queryMetaData);
+    queryMetaData.columns = user->getColumns();
+
+    size_t userId = user->getId();
+
+    std::vector<std::string> values;
+    values.push_back(w.quote(userId));
+    values.push_back(w.quote(user->getName()));
+    values.push_back(w.quote(user->getEmail()));
+    values.push_back(w.quote(user->getPassword()));
+    values.push_back(w.quote(to_string(user->getRole())));
+    values.push_back(w.quote(user->getBalance()));
+
+    queryMetaData.values = values;
+
+    w.commit();
+
+    userRepository.update(conn, &queryMetaData, userId);
+}
+
 optional<UserEntity> UserService::findById(pqxx::connection *conn, size_t id) {
     UserRepository userRepository;
     QueryMetaData queryMetaData;

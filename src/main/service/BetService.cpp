@@ -1,16 +1,26 @@
 #include "BetService.h"
 
 void BetService::save(pqxx::connection *conn, BetEntity *entity) {
+    EventService eventService;
     BetRepository BetRepository;
     QueryMetaData queryMetaData;
-    QueryBuilder queryBuilder;
+
+    optional<EventEntity> eventEntity = eventService.findById(conn, entity->getEvent().getId());
+
+    if (eventEntity.has_value()) {
+        EventEntity event = eventEntity.value();
+
+        if (!isDateValid(event.getTime())) {
+            throw runtime_error("O evento não está mais disponível.");
+        }
+    }
 
     pqxx::work w(*conn);
 
     setTableName(&queryMetaData);
     queryMetaData.columns = entity->getColumns();
 
-    std::vector<std::string> values;
+    vector<string> values;
     values.push_back(BetRepository.getCodeAutoIncrementId(entity));
     values.push_back(w.quote(entity->getUser().getId()));
     values.push_back(w.quote(entity->getEvent().getId()));
@@ -48,12 +58,51 @@ optional<vector<BetEntity>> BetService::findAll(pqxx::connection *conn) {
     optional<pqxx::result> res = BetRepository.findAll(conn, &queryMetaData);
 
     if (res.has_value()) {
-        std::vector<BetEntity> value = processFindAll(conn, res.value());
+        vector<BetEntity> value = processFindAll(conn, res.value());
         
         return value;
     } 
 
     return nullopt;
+}
+
+optional<vector<BetEntity>> BetService::findAllByEventId(pqxx::connection *conn, size_t id) {
+    BetRepository BetRepository;
+    QueryMetaData queryMetaData;
+    setTableName(&queryMetaData);
+
+    optional<pqxx::result> res = BetRepository.findAllByEventId(conn, &queryMetaData, id);
+
+    if (res.has_value()) {
+        vector<BetEntity> value = processFindAll(conn, res.value());
+        
+        return value;
+    } 
+
+    return nullopt;
+}
+
+void BetService::closeBet(pqxx::connection *conn, size_t idEvent, TypeOfBets eventResult) {
+    UserService userService;
+    UserEntity user;
+    double newBalance;
+    double odd;
+    optional<vector<BetEntity>> bets = findAllByEventId(conn, idEvent);
+
+    cout << "CLOSE BETS" << endl;
+
+    if (bets.has_value()) {
+        for (const auto& bet : bets.value()) {
+            if (bet.getBet() == eventResult) {
+                user = bet.getUser();
+                odd = bet.getEvent().getOdds()[static_cast<int>(eventResult)];
+                cout << "Odd do evento: " << odd << endl;
+                newBalance = user.getBalance() + (odd * bet.getAmount());
+                user.setBalance(newBalance);
+                userService.update(conn, &user);
+            }
+        }
+    }
 }
 
 // Métodos privados
@@ -69,20 +118,20 @@ BetEntity BetService::createEntityFromResult(pqxx::connection *conn, const pqxx:
     int userId = row["id_usuario"].as<int>();
     int eventId = row["id_evento"].as<int>();
 
-    std::optional<UserEntity> optionalUser = userService.findById(conn, userId);
-    std::optional<EventEntity> optionalEvent = eventService.findById(conn, eventId);
+    optional<UserEntity> optionalUser = userService.findById(conn, userId);
+    optional<EventEntity> optionalEvent = eventService.findById(conn, eventId);
 
     if (!optionalUser) {
-        std::cerr << "Usuário com ID " << userId << " não encontrado." << std::endl;
-        throw std::runtime_error("Usuário não encontrado");
+        cerr << "Usuário com ID " << userId << " não encontrado." << endl;
+        throw runtime_error("Usuário não encontrado");
     }
 
     if (!optionalEvent) {
-        std::cerr << "Evento com ID " << eventId << " não está cadastrado." << std::endl;
-        throw std::runtime_error("Evento não encontrado");
+        cerr << "Evento com ID " << eventId << " não está cadastrado." << endl;
+        throw runtime_error("Evento não encontrado");
     }
 
-    std::string betValue = row["aposta"].as<std::string>();
+    string betValue = row["aposta"].as<string>();
     TypeOfBets statusEnum = convertStringToTypeOfBetsEnum(betValue);
 
     return BetEntity(
@@ -109,3 +158,24 @@ vector<BetEntity> BetService::processFindAll(pqxx::connection *conn, pqxx::resul
     return results;
 }
 
+
+tm BetService::convertStringToTm(const string& datetime) {
+    tm tm = {};
+    istringstream ss(datetime);
+    ss >> get_time(&tm, "%Y-%m-%d %H:%M:%S");
+    return tm;
+}
+
+bool BetService::isDateValid(const string& dateStr) {
+    tm returned_tm = convertStringToTm(dateStr);
+
+    auto now = chrono::system_clock::now();
+    auto now_time_t = chrono::system_clock::to_time_t(now);
+    tm now_tm = *localtime(&now_time_t);
+
+    if (difftime(mktime(&returned_tm), mktime(&now_tm)) > 0) {
+        return true;
+    }
+
+    return false;
+}

@@ -21,6 +21,13 @@ public:
         executeSql(conn, query);
     }
 
+    void update(pqxx::connection* conn, QueryMetaData *queryMetaData, size_t id) {
+        QueryBuilder QueryBuilder;
+        std::string query = QueryBuilder.buildUpdateQuery(queryMetaData, id);
+
+        executeSql(conn, query);
+    }
+
     optional<pqxx::result> findById(pqxx::connection* conn, QueryMetaData *queryMetaData, size_t id) {
         QueryBuilder queryBuilder;
         std::string query = queryBuilder.buildFindByIdQuery(queryMetaData, id);
