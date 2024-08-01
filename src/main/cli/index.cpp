@@ -150,3 +150,84 @@ size_t adminMenu(){
 
     return option;
 }
+
+size_t account() {
+    size_t option;
+    linesFormat("CONTA");
+
+    cout << "1) Depositar" << endl;
+    cout << "2) Sacar" << endl;
+    cout << "3) Saldo" << endl;
+    cout << "Escolha a sua opção: ";
+    cin >> option;
+    getchar();
+
+    return option;
+}
+
+double depositAmount() {
+    double amount;
+    linesFormat("DEPOSITAR");
+
+    cout << "Digite o saldo a ser depositado: ";
+    cin >> amount;
+
+    return amount;
+}
+
+double withdrawAmount() {
+    double amount;
+    linesFormat("SACAR");
+
+    cout << "Digite o valor a ser sacado: ";
+    cin >> amount;
+
+    return amount;
+}
+
+
+optional<SportEntity> createSport() {
+    string name;
+    string type;
+    linesFormat("CADASTRAR ESPORTE");
+
+    cout << "Digite o nome do esporte: ";
+    getline(cin, name);
+    if(name.length() < 3) {
+        altLinesFormat("NOME INVÁLIDO");
+        return nullopt;
+    }
+
+    cout << "Digite o tipo do esporte: ";
+    getline(cin, type);
+    if(type.length() < 3) {
+        altLinesFormat("TIPO INVÁLIDO");
+        return nullopt;
+    }
+
+    return SportEntity(0, name, type);
+}
+
+optional<ParticipantsEntity> createParticipant() {
+    string name;
+    int wins;
+    linesFormat("CADASTRAR PARTICIPANTE");
+
+    cout << "Nome do participante: ";
+    getline(cin, name);
+    if(name.length() < 3) {
+        altLinesFormat("NOME INVÁLIDO");
+        return nullopt;
+    }
+
+    cout << "Quantidade de vitórias do participante";
+    cin >> wins;
+    getchar();
+
+    if(wins < 0) {
+        altLinesFormat("Quantidade inválida!");
+        return nullopt;
+    }
+
+    return ParticipantsEntity(0, name, wins);
+}

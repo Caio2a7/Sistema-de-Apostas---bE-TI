@@ -135,6 +135,58 @@ optional<vector<UserEntity>> UserService::findAll(pqxx::connection *conn) {
     return nullopt;
 }
 
+bool UserService::deposit(pqxx::connection *conn, UserEntity user) {
+    double amount = depositAmount();
+
+    if(amount <= 0) {
+        altLinesFormat("VALOR DE DEPOSITO DEVE SER MAIOR QUE 0!");
+        return false;
+    }
+
+    string sql = "UPDATE usuario SET saldo = saldo + " + conn->quote(amount) + " WHERE id = " + conn->quote(user.getId()) + ";";
+
+    pqxx::result res = executeSql(conn, sql);
+
+    if(res.affected_rows() > 0) {
+        altLinesFormat("DEPOSITO REALIZADO COM SUCESSO");
+        return true;
+    }
+
+    altLinesFormat("NAO FOI POSSIVEL REALIZAR SEU DEPOSITO");
+    return false;
+}
+
+bool UserService::withdraw(pqxx::connection *conn, UserEntity user) {
+    double amount = withdrawAmount();
+    string sql = "UPDATE usuario SET saldo = saldo - " + conn->quote(amount) + " WHERE id = " + conn->quote(user.getId()) + ";";
+    
+    if(user.getBalance() - amount < 0) {
+        altLinesFormat("Saldo insuficiente!");
+        return false;
+    } 
+
+    pqxx::result res = executeSql(conn, sql);
+
+    if(res.affected_rows() > 0) {
+        altLinesFormat("Saque realizado com sucesso!");
+        return true;
+    }
+
+    altLinesFormat("Nao foi possivel realizar seu saque");
+    return false;
+}
+
+bool UserService::alreadyExists(pqxx::connection *conn, string email) {
+    UserService userServices;
+    optional<UserEntity> user = userServices.findByEmail(conn, email);
+
+    if(user) {
+        return true;
+    }
+
+    return false;
+}
+
 // Métodos Private
 
 void UserService::setTableName(QueryMetaData *queryMetaData) {

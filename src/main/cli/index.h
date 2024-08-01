@@ -6,6 +6,8 @@
 #include <string>
 #include <optional>
 #include "../entities/UserEntity.h"
+#include "../entities/ParticipantsEntity.h"
+#include "../entities/SportEntity.h"
 #include "../enum/UserRoleEnum.h"
 
 using namespace std;
@@ -17,8 +19,14 @@ size_t login();
 bool isEmailCheck();
 bool isPasswordCheck();
 bool isPositiveCheck();
+bool isTimeCheck();
 pair<string, string> authAccount();
 optional<UserEntity> createAccount();
 size_t menu();
 size_t adminMenu();
+size_t account();
+double depositAmount();
+double withdrawAmount();
+optional<SportEntity> createSport();
+optional<ParticipantsEntity> createParticipant();
 #endif

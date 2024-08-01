@@ -25,6 +25,12 @@ class UserService {
         
         optional<vector<UserEntity>> findAll(pqxx::connection *conn);
 
+        bool deposit(pqxx::connection *conn, UserEntity user);
+        
+        bool withdraw(pqxx::connection *conn, UserEntity user);
+
+        bool alreadyExists(pqxx::connection *conn, string email);
+
     private:
         void setTableName(QueryMetaData *queryMetaData);
 };
