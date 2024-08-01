@@ -33,5 +33,5 @@ double depositAmount();
 double withdrawAmount();
 optional<SportEntity> createSport();
 optional<ParticipantsEntity> createParticipant();
-optional<EventEntity> createNewEvent();
+optional<EventEntity> createNewEvent(pqxx::connection *conn);
 #endif

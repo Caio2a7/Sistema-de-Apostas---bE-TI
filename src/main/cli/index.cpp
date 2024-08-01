@@ -240,12 +240,10 @@ optional<ParticipantsEntity> createParticipant() {
 optional<EventEntity> createNewEvent(pqxx::connection *conn) {
     SportService sportsService;
     ParticipantsService participantsService;
-    EventService eventsService;
 
     optional<SportEntity> sport;
     optional<ParticipantsEntity> teamA;
     optional<ParticipantsEntity> teamB;
-    optional<EventEntity> sport;
 
     int sportId;
     int aTeamId;
@@ -256,6 +254,8 @@ optional<EventEntity> createNewEvent(pqxx::connection *conn) {
     string dateTime;
     string statusStr;
     EventStatusEnum status;
+
+    linesFormat("CADASTRAR EVENTO");
 
     cout << "ID do esporte: ";
     cin >> sportId;
