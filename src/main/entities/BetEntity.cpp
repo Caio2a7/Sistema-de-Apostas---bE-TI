@@ -1,4 +1,6 @@
 #include "BetEntity.h"
+#include <iomanip>
+#include "../cli/index.h"
 
 BetEntity::BetEntity() 
     : id(0), amount(0.0) {}
@@ -31,11 +33,19 @@ std::vector<std::string> BetEntity::getColumns() {
 }
 
 void BetEntity::toString() const {
-    cout << "ID: " << id << "\n";
-    cout << "Usuário: " << endl;
+    cout << string(159, '=') << endl;
+    cout << "ID da aposta: " << id  <<endl;
+    cout << "|Usuário| "  << endl;
     user.toString();
-    cout << "Evento: " << endl;
+    cout << "|Evento| " << endl;
+    tableFormat("ID", 0);
+    tableFormat("Horário", 1);
+    tableFormat("Status", 4);
+    tableFormat("Esporte", 1);
+    tableFormat("Odd vitória time A", 6);
+    tableFormat("Odd vitória time B", 6);
+    tableFormat("Odd empate", 2);
     event.toString();
-    cout << "Valor da Aposta:" << amount << endl;
-    cout << "Tipo da aposta:" << bet << endl;
+    cout << "Valor da Aposta: " << fixed << setprecision(3) << amount << endl;
+    cout << "Tipo da aposta: " << bet << endl;
 }

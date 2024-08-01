@@ -1,6 +1,7 @@
 #include "EventEntity.h"
+#include "../cli/index.h"
 #include <string>
-#define TABLE_WIDTH 150
+#include <iomanip>
 
 EventEntity::EventEntity() 
     : id(0), odds({0.0, 0.0, 0.0}), time(0) {}
@@ -50,7 +51,17 @@ void EventEntity::toString() const {
     cout << "|" << string(to_string(status).length()-4, ' ') << to_string(status) << string(5, ' ');
     int sportLeftPadding = sport.getName().length() < 7 ? 8 : 8;
     int sportRightPadding = sport.getName().length() < 7 ? 8+(8-sport.getName().length()) : (8*2) - sport.getName().length();
-    cout << "|" << string(sportLeftPadding, ' ') << sport.getName() << string(sportRightPadding, ' ') << "|" << endl;
+    cout << "|" << string(sportLeftPadding, ' ') << sport.getName() << string(sportRightPadding, ' ');
+    for (const auto& odd : odds) {
+        cout << "|" << setprecision(2) << string(11, ' ') << odd << string(9, ' ');
+    }
+    cout << "      |" << endl;
+    
+    cout << string(159, '-') << "\n" << endl;
+
+
+    teamTableFormat(make_pair(teamA.getName(), teamB.getName()), make_pair(teamA.getVictorys(), teamB.getVictorys()));
+
     /*cout << "Esporte:" << endl;
     sport.toString();
     cout << "Time A:" << endl;

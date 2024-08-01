@@ -30,10 +30,10 @@ std::vector<std::string> UserEntity::getColumns() {
 }
 
 void UserEntity::toString() const {
-    cout << "ID: " << id << "\n"
-         << "Name: " << name << "\n"
+    cout << "ID do usuário: " << id << "\n"
+         << "Nome: " << name << "\n"
          << "Email: " << email << "\n"
          << "Senha: " << password << "\n"
-         << "Role: " << role << "\n"
-         << "Balance: " << balance << endl;
+         << "Encargo: " << role << "\n"
+         << "Saldo: " << balance << endl;
 }

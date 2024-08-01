@@ -15,7 +15,7 @@ string SportEntity::getType() const { return type; }
 void SportEntity::setType(const string& type) { this->type = type; }
 
 void SportEntity::toString() const {
-    cout << "ID: " << id << "\n"
+    cout << "ID do esporte: " << id << "\n"
          << "Name: " << name << "\n"
          << "Type: " << type << endl;
 }
