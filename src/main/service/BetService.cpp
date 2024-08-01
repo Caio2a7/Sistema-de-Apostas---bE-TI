@@ -2,8 +2,20 @@
 
 void BetService::save(pqxx::connection *conn, BetEntity *entity) {
     EventService eventService;
+    UserService userService;
     BetRepository BetRepository;
     QueryMetaData queryMetaData;
+    
+    UserEntity user = entity->getUser();
+
+    if (user.getBalance() < entity->getAmount()) {
+        std::cerr << "Saldo insuficiente" << std::endl;
+        return;
+    }
+
+    double newBalance = user.getBalance() - entity->getAmount();
+    user.setBalance(newBalance);
+    userService.update(conn, &user);
 
     optional<EventEntity> eventEntity = eventService.findById(conn, entity->getEvent().getId());
 
@@ -113,7 +125,6 @@ void BetService::closeBet(pqxx::connection *conn, size_t idEvent, TypeOfBets eve
             if (bet.getBet() == eventResult) {
                 user = bet.getUser();
                 odd = bet.getEvent().getOdds()[static_cast<int>(eventResult)];
-                cout << "Odd do evento: " << odd << endl;
                 newBalance = user.getBalance() + (odd * bet.getAmount());
                 user.setBalance(newBalance);
                 userService.update(conn, &user);
