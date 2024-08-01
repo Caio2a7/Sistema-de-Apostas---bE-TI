@@ -42,8 +42,6 @@ class QueryBuilder {
 
         query << ");";
 
-        cout << "Query: " << query.str() << endl;
-
         return query.str();
     }
 
@@ -52,16 +50,12 @@ class QueryBuilder {
         query << "SELECT * FROM " << metaData->tableName 
               << " WHERE id = " << id << ";";
 
-        cout << "Query: " << query.str() << endl;
-
         return query.str();
     }
 
     string buildFindAllQuery(QueryMetaData *metaData) {
         ostringstream query;
         query << "SELECT * FROM " << metaData->tableName << ";";
-
-        cout << "Query: " << query.str() << endl;
 
         return query.str();
     }
@@ -70,8 +64,6 @@ class QueryBuilder {
         ostringstream query;
         query << "SELECT * FROM " << metaData->tableName 
               << " WHERE email = " << pqxx::to_string(email) << ";";
-
-        cout << "Query: " << query.str() << endl;
 
         return query.str();
     }
@@ -89,8 +81,6 @@ class QueryBuilder {
         }
 
         query << " WHERE id = " << id << ";";
-
-        cout << "Query: " << query.str() << endl;
 
         return query.str();
     }
@@ -114,8 +104,6 @@ class QueryBuilder {
         ostringstream query;
         query << "SELECT * FROM " << metaData->tableName  
               << " WHERE id_evento = " << eventId << ";";
-
-        cout << "Query: " << query.str() << endl;
 
         return query.str();
     }

@@ -1,11 +1,16 @@
 #include "BetEntity.h"
 
 BetEntity::BetEntity() 
-    : amount(0.0) {}
+    : id(0), amount(0.0) {}
 
+BetEntity::BetEntity(int id, UserEntity user, EventEntity event, double amount, TypeOfBets bet)
+    : id(id), user(user), event(event), amount(amount), bet(bet) {}
 BetEntity::BetEntity(UserEntity user, EventEntity event, double amount, TypeOfBets bet)
-    : user(user), event(event), amount(amount), bet(bet) {}
+    : id(0), user(user), event(event), amount(amount), bet(bet) {}
 
+
+int BetEntity::getId() const { return id; }
+void BetEntity::setId(int id) { this->id = id; }
 
 UserEntity BetEntity::getUser() const { return user; }
 void BetEntity::setUser(const UserEntity& user) { this->user = user; }
@@ -26,6 +31,7 @@ std::vector<std::string> BetEntity::getColumns() {
 }
 
 void BetEntity::toString() const {
+    cout << "ID: " << id << "\n";
     cout << "Usuário: " << endl;
     user.toString();
     cout << "Evento: " << endl;

@@ -94,7 +94,7 @@ int main() {
                         }
                         break;
                     case 2:
-                        cout << "Digit o id do Evento: ";
+                        cout << "Digite o id do Evento: ";
                         cin >> eventId;
                         getchar();
                         event = eventServices.findById(conn, eventId);

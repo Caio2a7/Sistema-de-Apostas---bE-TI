@@ -135,6 +135,7 @@ BetEntity BetService::createEntityFromResult(pqxx::connection *conn, const pqxx:
     TypeOfBets statusEnum = convertStringToTypeOfBetsEnum(betValue);
 
     return BetEntity(
+        row["id"].as<size_t>(), 
         optionalUser.value(),
         optionalEvent.value(),
         row["valor"].as<double>(), 
