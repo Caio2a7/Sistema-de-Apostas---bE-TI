@@ -75,6 +75,22 @@ optional<vector<BetEntity>> BetService::findAllByEventId(pqxx::connection *conn,
 
     if (res.has_value()) {
         vector<BetEntity> value = processFindAll(conn, res.value());
+
+        return value;
+    } 
+
+    return nullopt;
+}
+
+optional<vector<BetEntity>> BetService::findAllByEventId(pqxx::connection *conn, size_t id) {
+    BetRepository BetRepository;
+    QueryMetaData queryMetaData;
+    setTableName(&queryMetaData);
+
+    optional<pqxx::result> res = BetRepository.findAllByEventId(conn, &queryMetaData, id);
+
+    if (res.has_value()) {
+        vector<BetEntity> value = processFindAll(conn, res.value());
         
         return value;
     } 
