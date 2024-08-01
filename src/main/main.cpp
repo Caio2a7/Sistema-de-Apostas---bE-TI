@@ -39,9 +39,15 @@ int main() {
             }
             else if(option == 2){
                 optional<UserEntity> userData = createAccount();
+                if(userData.has_value()) {
+                    if(userServices.alreadyExists(conn, userData.value().getEmail())) {
+                        altLinesFormat("Email já cadastrado!");
+                    }
+                }
                 if(userData){
                     bool isUserSaved = userServices.save(conn, &(*userData));
                     if(isUserSaved){
+                        user = userData;
                         altLinesFormat("Usuário cadastrado com sucesso!");
                         break;
                     }
@@ -67,7 +73,26 @@ int main() {
                         break;
                     case 4:
                         break;
-                    case 5:
+                    case 5: 
+                        if(user.has_value()) {
+                            user = userServices.findById(conn, user.value().getId());
+                            switch(account()) {
+                            case 1: 
+                                userServices.deposit(conn, user.value());
+                                break;
+                            case 2: 
+                                userServices.withdraw(conn, user.value());    
+                                break;
+                            case 3:
+                                linesFormat("CONTA");
+                                cout << user.value().getBalance() << "R$" << endl;
+                                break;
+                            case 0: break;
+                            default: 
+                                altLinesFormat("Digite uma opção válida"); 
+                                break;
+                            }
+                        }
                         break;
                     default:
                         altLinesFormat("Digite uma opção válida");
@@ -128,6 +153,27 @@ int main() {
                         }
                         break;
                     case 4:
+                        if(user.has_value()) {
+                            user = userServices.findById(conn, user.value().getId());
+                            switch(account()) {
+                            case 1: 
+                                userServices.deposit(conn, user.value());
+                                break;
+                            case 2: 
+                                userServices.withdraw(conn, user.value());    
+                                break;
+                            case 3:
+                                linesFormat("CONTA");
+                                cout << user.value().getBalance() << "R$" << endl;
+                                break;
+                            case 0: break;
+                            default: 
+                                altLinesFormat("Digite uma opção válida"); 
+                                break;
+                            }
+                        }
+                        break;
+                    case 0: 
                         break;
                     default:
                         altLinesFormat("Digite uma opção válida");
