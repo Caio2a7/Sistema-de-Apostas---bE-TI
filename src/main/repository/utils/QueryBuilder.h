@@ -104,7 +104,7 @@ class QueryBuilder {
         ostringstream query;
         query << "SELECT * FROM " << metaData->tableName  
               << " WHERE id_evento = " << eventId << ";";
-      
+        
         return query.str();
     }
 };
