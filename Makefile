@@ -17,7 +17,7 @@ SOURCES = $(wildcard $(ENTITIDIR)/*.cpp) $(wildcard $(CLISRC)/*.cpp) $(wildcard 
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Nome do executável
-TARGET = $(BUILDDIR)/beTI.bin
+TARGET = $(BUILDDIR)/betTI.bin
 
 # Criar o diretório build se não existir
 $(shell mkdir -p $(BUILDDIR))

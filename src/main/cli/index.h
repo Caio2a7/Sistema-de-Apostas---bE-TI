@@ -14,6 +14,7 @@
 #include "../service/EventService.h"
 #include "../enum/UserRoleEnum.h"
 #include "../repository/utils/QueryBuilder.h"
+#include "../enum/EventStatusEnum.h"
 
 using namespace std;
 

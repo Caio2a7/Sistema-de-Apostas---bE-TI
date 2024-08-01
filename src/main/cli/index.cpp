@@ -219,13 +219,16 @@ size_t menu(){
 size_t adminMenu(){
     size_t option;
 
-    linesFormat("MENU");
+    linesFormat("ADMIN MENU");
     cout << "1) Ver jogos" << endl;
-    cout << "2) Setar jogos" << endl;
-    cout << "3) Apostar" << endl;
-    cout << "4) Status das apostas" << endl;
-    cout << "5) Mudar status de eventos" << endl;
-    cout << "6) Conta" << endl;
+    cout << "2) Apostar" << endl;
+    cout << "3) Status das apostas" << endl;
+    cout << "4) Conta" << endl;
+    cout << "5) Criar esporte" << endl;
+    cout << "6) Criar participantes" << endl;
+    cout << "7) Criar evento" << endl;
+    cout << "8) Atualizar evento" << endl;
+
     cout << "0) Sair" << endl;
     cout << "Escolha a sua opção: ";
     cin >> option;
@@ -233,6 +236,7 @@ size_t adminMenu(){
 
     return option;
 }
+
 
 size_t account() {
     size_t option;
@@ -356,6 +360,7 @@ optional<EventEntity> createNewEvent(pqxx::connection *conn) {
 
     cout << "ID do Time B: ";
     cin >> bTeamId;
+    cin.ignore();
     teamB = participantsService.findById(conn, bTeamId);
     if(!teamB) { //Não prossegue caso o time não exista
         altLinesFormat("Time não existente!");
@@ -393,6 +398,14 @@ bool changeEventStatus(pqxx::connection *conn) {
     events = eventServices.findAll(conn);
     if(events) {
         for (const auto& event : events.value()) {
+            cout << "\n" << endl;
+            tableFormat("ID", 0);
+            tableFormat("Horário", 1);
+            tableFormat("Status", 4);
+            tableFormat("Esporte", 1);
+            tableFormat("Odd vitória time A", 6);
+            tableFormat("Odd vitória time B", 6);
+            tableFormat("Odd empate", 2);
             event.toString();
         }
     }
